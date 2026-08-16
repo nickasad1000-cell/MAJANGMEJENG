@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
@@ -47,8 +47,8 @@
   --accent-foreground: 220 34% 16%;
   --destructive: 4 75% 50%;
   --destructive-foreground: 39 43% 91%;
-  --app-font-sans: 'DM Sans', sans-serif;
-  --app-font-serif: 'Syne', sans-serif;
+  --app-font-sans: 'Manrope', sans-serif;
+  --app-font-serif: 'Space Grotesk', sans-serif;
   --app-font-mono: 'DM Mono', monospace;
   --radius: 0.35rem;
   --shadow-sm: 0 4px 14px hsl(220 34% 16% / 0.08);

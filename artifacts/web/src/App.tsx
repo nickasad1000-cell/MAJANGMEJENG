@@ -5,6 +5,7 @@ import {
   Instagram,
   Mail,
   MapPin,
+  MessageCircle,
   Menu,
   Music2,
   Plus,
@@ -23,6 +24,7 @@ const socials = {
   instagram: 'https://www.instagram.com/majangmejeng_/',
   tiktok: 'https://www.tiktok.com/@majangmejeng_?lang=id-ID',
   mail: 'mailto:halo@majangmejeng.studio',
+  whatsapp: 'https://wa.me/6282225666597?text=Halo%20Majang%20Mejeng%2C%20saya%20ingin%20memulai%20percakapan.',
 };
 
 const navItems = [
@@ -276,7 +278,14 @@ function Home() {
             </div>
             <div className="max-w-[350px] lg:pb-3">
               <p className="text-[17px] leading-[1.45] text-[#f8f0dc]/85">Mau berbagi tempat, kenalan, atau ide yang belum sempat jadi? Kotak masuk kami terbuka.</p>
-              <a href={socials.mail} data-testid="link-contact-email" className="focus-ring editorial-link group mt-7 inline-flex items-center gap-3 font-bold transition-colors hover:text-[#f4d814]">halo@majangmejeng.studio <Mail size={17} className="transition-transform group-hover:rotate-12" /></a>
+              <div className="mt-7 flex flex-col items-start gap-5">
+                <a href={socials.whatsapp} target="_blank" rel="noreferrer" data-testid="link-contact-whatsapp" aria-label="Mulai percakapan di WhatsApp" className="focus-ring group inline-flex items-center gap-3 bg-[#f4d814] px-4 py-3 text-left font-bold text-[#162338] transition-transform hover:-translate-y-1">
+                  <MessageCircle size={19} />
+                  <span className="flex flex-col leading-tight"><span>Start Conversation</span><span className="mt-1 font-mono-brand text-[9px] font-medium uppercase tracking-[.12em] opacity-65">0822 2566 6597</span></span>
+                  <ArrowUpRight size={17} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                </a>
+                <a href={socials.mail} data-testid="link-contact-email" className="focus-ring editorial-link group inline-flex items-center gap-3 font-bold transition-colors hover:text-[#f4d814]">halo@majangmejeng.studio <Mail size={17} className="transition-transform group-hover:rotate-12" /></a>
+              </div>
             </div>
           </div>
         </div>
@@ -289,7 +298,7 @@ function Home() {
               <a href="#atas" data-testid="link-footer-brand" className="focus-ring group inline-block" aria-label="Kembali ke beranda"><img src="/majang-mejeng-logo.png" alt="Majang Mejeng" className="w-[168px] transition-transform duration-300 group-hover:-rotate-2" data-testid="img-footer-logo" /></a>
               <p className="mt-4 max-w-[270px] text-sm leading-[1.45] text-[#f8f0dc]/55">Media sosial untuk hal-hal yang terlalu menarik untuk dilewatkan.</p>
             </div>
-            <div><div className="font-mono-brand text-[10px] uppercase tracking-[.15em] text-[#f4d814]">temui kami</div><div className="mt-4 grid gap-2 text-sm"><a href={socials.instagram} target="_blank" rel="noreferrer" data-testid="link-footer-instagram" className="focus-ring flex items-center gap-2 text-[#f8f0dc]/70 transition-colors hover:text-[#f4d814]"><Instagram size={15} /> Instagram</a><a href={socials.tiktok} target="_blank" rel="noreferrer" data-testid="link-footer-tiktok" className="focus-ring flex items-center gap-2 text-[#f8f0dc]/70 transition-colors hover:text-[#f4d814]"><Music2 size={15} /> TikTok</a></div></div>
+            <div><div className="font-mono-brand text-[10px] uppercase tracking-[.15em] text-[#f4d814]">temui kami</div><div className="mt-4 grid gap-2 text-sm"><a href={socials.instagram} target="_blank" rel="noreferrer" data-testid="link-footer-instagram" className="focus-ring flex items-center gap-2 text-[#f8f0dc]/70 transition-colors hover:text-[#f4d814]"><Instagram size={15} /> Instagram</a><a href={socials.tiktok} target="_blank" rel="noreferrer" data-testid="link-footer-tiktok" className="focus-ring flex items-center gap-2 text-[#f8f0dc]/70 transition-colors hover:text-[#f4d814]"><Music2 size={15} /> TikTok</a><a href={socials.whatsapp} target="_blank" rel="noreferrer" data-testid="link-footer-whatsapp" className="focus-ring flex items-center gap-2 text-[#f8f0dc]/70 transition-colors hover:text-[#f4d814]"><MessageCircle size={15} /> WhatsApp</a></div></div>
             <div><div className="font-mono-brand text-[10px] uppercase tracking-[.15em] text-[#f4d814]">lompat ke</div><div className="mt-4 grid gap-2 text-sm">{navItems.map((item) => <a key={item.href} href={item.href} data-testid={`link-footer-${item.label}`} className="focus-ring text-[#f8f0dc]/70 transition-colors hover:text-[#f4d814]">{item.label}</a>)}</div></div>
           </div>
           <div className="flex flex-col justify-between gap-3 pt-6 font-mono-brand text-[9px] uppercase tracking-[.14em] text-[#f8f0dc]/40 sm:flex-row"><span>© 2025 majang mejeng</span><span>dibuat dengan rasa penasaran</span><a href={socials.mail} data-testid="link-footer-email" className="focus-ring transition-colors hover:text-[#f4d814]">email kami</a></div>
