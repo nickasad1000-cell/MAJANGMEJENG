@@ -5,6 +5,7 @@ import {
   Instagram,
   Menu,
   MessageCircle,
+  Play,
   X,
 } from "lucide-react";
 
@@ -14,7 +15,7 @@ const WHATSAPP_URL =
   "https://wa.me/6282225666497?text=Halo%20Majang%20Mejeng%2C%20saya%20ingin%20memulai%20percakapan.";
 
 const navItems = [
-  { label: "Cerita", target: "cerita" },
+  { label: "Arsip", target: "cerita" },
   { label: "Tentang", target: "tentang" },
   { label: "Kontak", target: "kontak" },
 ];
@@ -75,7 +76,7 @@ export function CleanHomepage() {
           rel="noreferrer"
           className="mm-header-cta focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff5a12]"
         >
-          Mulai ngobrol <ArrowUpRight size={15} strokeWidth={2.2} />
+            Mulai ngobrol <ArrowUpRight size={15} strokeWidth={2.2} />
         </a>
         <button
           type="button"
@@ -110,38 +111,41 @@ export function CleanHomepage() {
 
       <section id="atas" className="mm-hero">
         <div className="mm-hero-copy">
-          <p className="mm-kicker mm-reveal-left">Dari Jogja, untuk yang memperhatikan.</p>
+            <p className="mm-kicker mm-reveal-left">Jurnal lokal / Yogyakarta</p>
           <h1 className="mm-reveal mm-delay-1">
-            Kota ini punya
-            <em> cerita.</em>
+              Yang dekat
+              <em> jadi berarti.</em>
           </h1>
           <p className="mm-hero-note mm-reveal mm-delay-2">
-            Kami mengumpulkan detail kecil yang sering luput: orangnya, tempatnya,
-            rasanya, bunyinya.
+              Majang Mejeng melihat Yogyakarta dari jarak yang akrab: lewat orang,
+              kebiasaan, tempat, dan percakapan yang terus bergerak.
           </p>
           <div className="mm-hero-actions mm-reveal mm-delay-3">
             <button type="button" className="mm-primary-button" onClick={() => jumpTo("cerita")}>
-              Lihat yang kami temukan <ArrowDownRight size={18} />
+                Buka arsip cerita <ArrowDownRight size={18} />
             </button>
             <a href="https://www.instagram.com/majangmejeng_/" target="_blank" rel="noreferrer" className="mm-text-link">
-              Ikuti di Instagram <ArrowUpRight size={16} />
+                Ikuti di Instagram <ArrowUpRight size={16} />
             </a>
           </div>
         </div>
         <div className="mm-hero-art mm-reveal mm-delay-2">
-          <div className="mm-art-label">01 / catatan lapangan</div>
+            <div className="mm-art-label">01 / catatan lapangan</div>
           <img
             src="/__mockup/images/majang-editorial-collage.png"
             alt="Kolase editorial tentang sudut-sudut kehidupan sehari-hari di Yogyakarta"
           />
-          <p className="mm-art-caption">Yang akrab, dilihat lagi.</p>
+            <p className="mm-art-caption">Yang akrab, dilihat lagi.</p>
         </div>
       </section>
 
       <section id="cerita" className="mm-story">
         <div className="mm-section-intro">
-          <p className="mm-kicker">Sedang diperhatikan</p>
-          <h2>Bukan panduan kota.<br /><span>Lebih dekat dari itu.</span></h2>
+          <div>
+            <p className="mm-kicker">Arsip pengamatan</p>
+            <h2>Catatan dari<br /><span>yang sedang hidup.</span></h2>
+          </div>
+          <p className="mm-index-note">05 cerita / diperbarui berkala</p>
         </div>
         <div className="mm-feature">
           <div className="mm-film-wrap">
@@ -149,11 +153,11 @@ export function CleanHomepage() {
               src="/__mockup/images/majang-film-still.png"
               alt="Potret sinematik suasana jalan dan warga Yogyakarta"
             />
-            <span className="mm-film-tag">Tonton cuplikannya</span>
+            <span className="mm-film-tag"><Play size={12} fill="currentColor" /> Tonton cuplikannya</span>
           </div>
           <div className="mm-feature-copy">
-            <p className="mm-feature-number">Catatan 014</p>
-            <h3>Suara-suara yang membuat kita tahu: ini Jogja.</h3>
+            <p className="mm-feature-number">Pilihan minggu ini / 014</p>
+            <h3>Suara-suara yang membuat kita tahu: <em>ini Jogja.</em></h3>
             <p>
               Dari obrolan di warung sampai jeda panjang di gang kecil. Kami
               merekam, menulis, dan membagikannya dalam format yang terasa dekat.
@@ -163,6 +167,29 @@ export function CleanHomepage() {
             </a>
           </div>
         </div>
+        <div className="mm-archive" aria-label="Daftar arsip cerita">
+          {[
+            ["01", "Ruang", "Di balik pintu yang selalu terbuka", "12 Jun 2024", "Instagram"],
+            ["02", "Orang", "Mereka yang menjaga malam tetap menyala", "30 Mei 2024", "TikTok"],
+            ["03", "Rasa", "Sepiring cerita dari meja pojok", "18 Mei 2024", "Instagram"],
+            ["04", "Bunyi", "Nada kecil yang tinggal di gang besar", "02 Mei 2024", "TikTok"],
+            ["05", "Gerak", "Pagi-pagi, kota mulai berjalan", "21 Apr 2024", "Instagram"],
+          ].map(([number, category, title, date, channel]) => (
+            <a
+              className="mm-archive-row"
+              href={channel === "TikTok" ? "https://www.tiktok.com/@majangmejeng_" : "https://www.instagram.com/majangmejeng_/"}
+              target="_blank"
+              rel="noreferrer"
+              key={number}
+            >
+              <span className="mm-archive-number">{number}</span>
+              <span className="mm-archive-category">{category}</span>
+              <strong>{title}</strong>
+              <span className="mm-archive-meta">{date} · {channel}</span>
+              <ArrowUpRight size={17} />
+            </a>
+          ))}
+        </div>
       </section>
 
       <section id="tentang" className="mm-about">
@@ -171,7 +198,7 @@ export function CleanHomepage() {
           <h2>Ruang kecil untuk<br /><em>cerita yang besar artinya.</em></h2>
         </div>
         <p className="mm-about-copy">
-          Akun sosial lokal yang tumbuh dari rasa ingin tahu. Kami percaya
+           Akun sosial lokal yang tumbuh dari rasa ingin tahu. Kami percaya
           budaya bukan hanya yang dirayakan, tapi juga yang berlangsung setiap
           hari — pelan, lucu, dan apa adanya.
         </p>
@@ -179,11 +206,11 @@ export function CleanHomepage() {
 
       <section id="kontak" className="mm-contact">
         <div className="mm-contact-heading">
-          <p className="mm-kicker">Ada cerita?</p>
-          <h2>Mulai dari<br /><span>halo.</span></h2>
+           <p className="mm-kicker">Punya cerita?</p>
+           <h2>Mulai dari<br /><span>halo.</span></h2>
         </div>
         <div className="mm-contact-side">
-          <p>Untuk kolaborasi, titip cerita, atau sekadar menyapa. Pintu kami terbuka.</p>
+           <p>Untuk kolaborasi, menitipkan cerita, atau sekadar menyapa. Pintu kami terbuka.</p>
           <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="mm-whatsapp">
             <MessageCircle size={19} />
             <span>
@@ -197,7 +224,7 @@ export function CleanHomepage() {
 
       <footer className="mm-footer">
         <div className="mm-footer-brand">
-          <img src="/__mockup/images/majang-m-mark.png" alt="" />
+           <img src="/__mockup/images/majang-mark-source.png" alt="" />
           <span>Majang Mejeng</span>
         </div>
         <p>Yogyakarta, Indonesia · Melihat lebih dekat sejak 2020</p>
