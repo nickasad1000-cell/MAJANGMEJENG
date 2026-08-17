@@ -1,7 +1,7 @@
 kind = "web"
 previewPath = "/"
 title = "Majang Mejeng"
-description = "A bold editorial home for Majang Mejeng, a social-first Indonesian creator brand that turns everyday city moments, people, and local culture into memorable short-form stories."
+description = "Website media dan creative studio berbasis Lumajang, Jawa Timur, untuk membaca cerita lokal, melihat hasil kerja, dan meminta layanan produksi konten."
 version = "1.0.0"
 id = "artifacts/web"
 router = "path"
