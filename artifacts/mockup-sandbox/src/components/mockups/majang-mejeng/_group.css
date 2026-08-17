@@ -1,6 +1,6 @@
 .mm-page {
   --orange: #f45a16;
-  --orange-deep: #c83d0b;
+  --orange-deep: var(--orange);
   --ink: #171311;
   --paper: #f7f0e4;
   --paper-deep: #efe2d0;
@@ -64,7 +64,15 @@
 .mm-section-intro .mm-kicker { margin: 0 0 25px; }
 .mm-section-intro h2 { margin: 0; font: 900 clamp(2.6rem, 4.8vw, 5rem)/1.04 "Bricolage Grotesque", sans-serif; letter-spacing: -.08em; }
 .mm-section-intro h2 span { color: var(--orange-deep); font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 700; letter-spacing: -.06em; }
-.mm-index-note { color: var(--muted); font: 10px "Space Mono", monospace; letter-spacing: .03em; }
+.mm-archive-summary { display: grid; justify-items: end; gap: 21px; }
+.mm-index-note { margin: 0; color: var(--muted); font: 10px "Space Mono", monospace; letter-spacing: .03em; }
+.mm-archive-filters { display: flex; flex-wrap: wrap; justify-content: end; gap: 8px; }
+.mm-archive-filters button {
+  border: 1px solid rgba(23,19,17,.25); padding: 8px 10px; background: transparent; color: var(--muted);
+  cursor: pointer; font: 10px "Space Mono", monospace; letter-spacing: .04em; text-transform: uppercase;
+  transition: color .2s ease, background-color .2s ease, border-color .2s ease;
+}
+.mm-archive-filters button:hover, .mm-archive-filters button.is-active { border-color: var(--orange); background: var(--orange); color: var(--paper); }
 .mm-feature { display: grid; grid-template-columns: 1.2fr .8fr; gap: 84px; align-items: center; }
 .mm-film-wrap { position: relative; }
 .mm-film-wrap img { width: 100%; height: 395px; object-fit: cover; display: block; }
@@ -81,6 +89,7 @@
 .mm-archive-category { color: var(--orange-deep); text-transform: uppercase; }
 .mm-archive-row strong { font: 700 18px/1.2 "DM Sans", sans-serif; letter-spacing: -.03em; }
 .mm-archive-meta { text-align: right; }
+.mm-archive-empty { margin: 0; padding: 30px 0; color: var(--muted); font-size: 14px; }
 .mm-about { width: min(1180px, calc(100% - 64px)); padding: 160px 0; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; gap: 90px; align-items: end; }
 .mm-about h2 { font-size: clamp(3.3rem, 6.5vw, 6.7rem); line-height: 1; }
 .mm-about-copy { max-width: 350px; margin: 0 0 6px; color: var(--muted); font-size: 16px; line-height: 1.75; }
@@ -119,10 +128,11 @@
   .mm-hero-art { margin: 83px 0 52px; }
   .mm-hero-art img { height: 350px; }
   .mm-story { padding: 99px 19px 94px; }
-  .mm-section-intro { display: block; margin-bottom: 42px; }
+   .mm-section-intro { display: block; margin-bottom: 42px; }
   .mm-section-intro .mm-kicker { margin-bottom: 25px; }
   .mm-section-intro h2 { font-size: 2.85rem; }
-  .mm-index-note { margin-top: 26px; }
+   .mm-archive-summary { display: block; margin-top: 26px; }
+   .mm-archive-filters { justify-content: start; margin-top: 18px; }
   .mm-feature { display: block; }
   .mm-film-wrap img { height: 285px; }
   .mm-feature-copy { padding-top: 47px; }

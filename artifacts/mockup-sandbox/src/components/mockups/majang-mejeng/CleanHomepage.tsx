@@ -20,6 +20,16 @@ const navItems = [
   { label: "Kontak", target: "kontak" },
 ];
 
+const storyFilters = ["Semua", "Ruang", "Orang", "Rasa", "Bunyi", "Gerak"] as const;
+
+const storyArchive = [
+  ["01", "Ruang", "Di balik pintu yang selalu terbuka", "12 Jun 2024", "Instagram"],
+  ["02", "Orang", "Mereka yang menjaga malam tetap menyala", "30 Mei 2024", "TikTok"],
+  ["03", "Rasa", "Sepiring cerita dari meja pojok", "18 Mei 2024", "Instagram"],
+  ["04", "Bunyi", "Nada kecil yang tinggal di gang besar", "02 Mei 2024", "TikTok"],
+  ["05", "Gerak", "Pagi-pagi, kota mulai berjalan", "21 Apr 2024", "Instagram"],
+] as const;
+
 function jumpTo(target: string) {
   document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
   window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
@@ -27,6 +37,11 @@ function jumpTo(target: string) {
 
 export function CleanHomepage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<(typeof storyFilters)[number]>("Semua");
+  const visibleStories =
+    activeFilter === "Semua"
+      ? storyArchive
+      : storyArchive.filter(([, category]) => category === activeFilter);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -145,7 +160,22 @@ export function CleanHomepage() {
             <p className="mm-kicker">Arsip pengamatan</p>
             <h2>Catatan dari<br /><span>yang sedang hidup.</span></h2>
           </div>
-          <p className="mm-index-note">05 cerita / diperbarui berkala</p>
+          <div className="mm-archive-summary">
+            <p className="mm-index-note">{String(visibleStories.length).padStart(2, "0")} cerita / diperbarui berkala</p>
+            <div className="mm-archive-filters" aria-label="Saring arsip cerita">
+              {storyFilters.map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  className={activeFilter === filter ? "is-active" : ""}
+                  aria-pressed={activeFilter === filter}
+                  onClick={() => setActiveFilter(filter)}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
         <div className="mm-feature">
           <div className="mm-film-wrap">
@@ -168,13 +198,7 @@ export function CleanHomepage() {
           </div>
         </div>
         <div className="mm-archive" aria-label="Daftar arsip cerita">
-          {[
-            ["01", "Ruang", "Di balik pintu yang selalu terbuka", "12 Jun 2024", "Instagram"],
-            ["02", "Orang", "Mereka yang menjaga malam tetap menyala", "30 Mei 2024", "TikTok"],
-            ["03", "Rasa", "Sepiring cerita dari meja pojok", "18 Mei 2024", "Instagram"],
-            ["04", "Bunyi", "Nada kecil yang tinggal di gang besar", "02 Mei 2024", "TikTok"],
-            ["05", "Gerak", "Pagi-pagi, kota mulai berjalan", "21 Apr 2024", "Instagram"],
-          ].map(([number, category, title, date, channel]) => (
+          {visibleStories.map(([number, category, title, date, channel]) => (
             <a
               className="mm-archive-row"
               href={channel === "TikTok" ? "https://www.tiktok.com/@majangmejeng_" : "https://www.instagram.com/majangmejeng_/"}
@@ -189,6 +213,9 @@ export function CleanHomepage() {
               <ArrowUpRight size={17} />
             </a>
           ))}
+          {visibleStories.length === 0 && (
+            <p className="mm-archive-empty">Cerita untuk kategori ini sedang disiapkan.</p>
+          )}
         </div>
       </section>
 
