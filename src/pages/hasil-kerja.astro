@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { getCases } from '../lib/data';
+import { resolveImage } from '../lib/images';
 
 const cases = await getCases();
 
@@ -28,10 +30,20 @@ const PHOTOS = ['/photos/boat-sunrise.jpg', '/photos/fishermen-nets.jpg', '/phot
           <a href={`/hasil-kerja/${c.slug}`} class="reveal-up block focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none" aria-label={`Baca studi kasus ${c.client}`}>
           <article class="overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform duration-300 hover:-translate-y-1 md:grid md:grid-cols-12">
             <div class="relative min-h-[180px] bg-accent/40 md:col-span-4">
-              {c.cover_image ? (
-                <img src={c.cover_image} alt={`Proyek ${c.client}`} loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover" />
+              {(resolveImage(c.cover_image) ?? resolveImage(PHOTOS[idx % PHOTOS.length])) ? (
+                <Image
+                  src={(resolveImage(c.cover_image) ?? resolveImage(PHOTOS[idx % PHOTOS.length]))!}
+                  alt={`Proyek ${c.client}`}
+                  widths={[400, 640]}
+                  sizes="(min-width: 768px) 33vw, 100vw"
+                  format="webp"
+                  quality={78}
+                  loading="lazy"
+                  decoding="async"
+                  class="absolute inset-0 h-full w-full object-cover"
+                />
               ) : (
-                <img src={PHOTOS[idx % PHOTOS.length]} alt="" width={800} height={600} loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover opacity-90" />
+                <div class="paper-grid absolute inset-0 opacity-40"></div>
               )}
             </div>
             <div class="flex flex-col p-6 md:col-span-8 md:p-8">

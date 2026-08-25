@@ -20,7 +20,8 @@
 
   --color-secondary: var(--orange-deep);   /* AA-safe orange for small text/links */
   --color-secondary-foreground: #ffffff;
-  --orange-deep: #C2410C;                  /* 4.8:1 on cream — WCAG AA small text */
+  --orange-deep: #C2410C;                  /* 4.8:1 on cream / 5.2:1 w-putih — WCAG AA */
+  --surface-orange-deep: #C2410C;          /* band CTA: putih kecil di atasnya lolos AA */
   --color-accent: oklch(86% 0.12 40);
   --color-primary: oklch(24% 0.055 165);
   --color-primary-foreground: oklch(96% 0.02 80);
@@ -80,7 +81,7 @@
   --color-ring: var(--color-ring);
 
   --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+  --font-serif: 'Fraunces Variable', 'Fraunces', ui-serif, Georgia, serif;
   --font-mono: 'DM Mono', ui-monospace, monospace;
   --radius-xl: 0.75rem;
   --radius-2xl: 1rem;
@@ -141,7 +142,8 @@
 
   .btn-primary {
     @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition;
-    background: var(--orange); color: #fff;
+    /* orange-deep agar teks putih kecil lolos WCAG AA (5.2:1), FF5500 hanya 3.2:1 */
+    background: var(--orange-deep); color: #fff;
     box-shadow: 4px 4px 0 rgba(0,0,0,.85);
   }
   .btn-primary:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 rgba(0,0,0,.85); }

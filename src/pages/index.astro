@@ -1,9 +1,11 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Mark from '../components/Mark.astro';
 import StoryCard from '../components/StoryCard.astro';
 import Dengarkan from '../components/Dengarkan.astro';
 import { getStories, getLocations, getWaNumber, waLink } from '../lib/data';
+import { resolveImage } from '../lib/images';
 
 const stories = await getStories();
 const locations = await getLocations();
@@ -27,6 +29,12 @@ const PHOTOS = [
 ];
 const photoFor = (i: number) => PHOTOS[i % PHOTOS.length];
 
+const TRIP = [
+  { src: resolveImage('/photos/volcano-mist-aerial.jpg')!, alt: 'Kabut pagi di lereng gunung', label: 'PEAK / KABUT PAGI' },
+  { src: resolveImage('/photos/fields-mountain.jpg')!, alt: 'Jalur setapak di antara ladang', label: 'JALUR SETAPAK' },
+  { src: resolveImage('/photos/boat-sunrise.jpg')!, alt: 'Perahu saat matahari terbit di pelabuhan', label: 'PELABUHAN / SORE' },
+];
+
 const orgJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
@@ -49,12 +57,13 @@ const orgJsonLd = {
         loop
         playsinline
         preload="metadata"
-        poster="/photos/semeru-sunrise.jpg"
+        poster="/poster-semeru.jpg"
       >
+        <source src="/videos/hero-clouds.webm" type="video/webm" />
         <source src="/videos/hero-clouds.mp4" type="video/mp4" />
       </video>
       <noscript>
-        <img src="/photos/semeru-sunrise.jpg" alt="" class="ken-burns h-full w-full object-cover" />
+        <img src="/poster-semeru.jpg" alt="" class="ken-burns h-full w-full object-cover" />
       </noscript>
     </div>
     <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/70" aria-hidden="true"></div>
@@ -123,17 +132,18 @@ const orgJsonLd = {
         Jalan setapak, kabut pagi, <em class="italic">dan jalan pulang</em>.
       </h2>
       <div class="mt-12 grid gap-6 md:grid-cols-3">
-        {[
-          { src: '/photos/volcano-mist-aerial.jpg', alt: 'Kabut pagi di lereng gunung', label: 'PEAK / KABUT PAGI' },
-          { src: '/photos/fields-mountain.jpg', alt: 'Jalur setapak di antara ladang', label: 'JALUR SETAPAK' },
-          { src: '/photos/boat-sunrise.jpg', alt: 'Perahu saat matahari terbit di pelabuhan', label: 'PELABUHAN / SORE' },
-        ].map((v, i) => (
+        {TRIP.map((v, i) => (
           <figure class="reveal-up group overflow-hidden rounded-2xl border border-foreground/15 bg-card">
             <div class="aspect-video overflow-hidden">
-              <img
+              <Image
                 src={v.src}
                 alt={v.alt}
-                width={800} height={450} loading="lazy" decoding="async"
+                widths={[400, 640, 800]}
+                sizes="(min-width: 768px) 29vw, 100vw"
+                format="webp"
+                quality={78}
+                loading="lazy"
+                decoding="async"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
@@ -155,14 +165,21 @@ const orgJsonLd = {
         Tempat yang <em class="italic">kami datangi</em>.
       </h2>
       <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {locations.slice(0, 3).map((loc, idx) => (
+        {locations.slice(0, 3).map((loc, idx) => {
+          const locImg = resolveImage(photoFor(idx + 5))!;
+          return (
           <a href={`/cerita?loc=${loc.slug}`} class="group block rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
             <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform duration-300 hover:-translate-y-1">
               <div class="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={photoFor(idx + 5)}
+                <Image
+                  src={locImg}
                   alt={`Pemandangan ${loc.name}`}
-                  width={800} height={600} loading="lazy" decoding="async"
+                  widths={[400, 640, 800]}
+                  sizes="(min-width: 1024px) 29vw, (min-width: 768px) 45vw, 100vw"
+                  format="webp"
+                  quality={78}
+                  loading="lazy"
+                  decoding="async"
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
@@ -173,7 +190,8 @@ const orgJsonLd = {
               </div>
             </article>
           </a>
-        ))}
+          );
+        })}
       </div>
       <a href="/lokasi" class="link-fx mt-8 inline-flex text-sm font-medium">Semua kawasan →</a>
     </section>
@@ -183,14 +201,14 @@ const orgJsonLd = {
   <Dengarkan />
 
   {/* ============ MANIFESTO — full-bleed orange ============ */}
-  <section class="text-white" style="background:#FF5500" id="manifesto">
+  <section class="text-white" style="background:#C2410C" id="manifesto">
     <div class="container-mm grid items-center gap-10 py-20 md:grid-cols-12">
       <div class="md:col-span-8">
         <h2 class="font-serif text-4xl font-semibold leading-snug tracking-tight md:text-6xl">
           Ruang kecil untuk<br />
           <em class="italic">besar artinya</em>.
         </h2>
-        <p class="mt-5 max-w-lg text-lg text-white/90">
+        <p class="mt-5 max-w-lg text-lg text-white">
           Satu percakapan singkat bisa jadi titik awal. Tidak ada paket tersembunyi,
           tidak ada syarat minimum.
         </p>
@@ -207,16 +225,16 @@ const orgJsonLd = {
       </div>
     </div>
   </section>
-</Base>
 
-<script>
-  // Respect prefers-reduced-motion: pause hero video instead of autoplaying.
-  const heroVideo = document.querySelector<HTMLVideoElement>('section video[autoplay]');
-  if (heroVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    heroVideo.removeAttribute('autoplay');
-    heroVideo.pause();
-  }
-</script>
+  <script>
+    // Respect prefers-reduced-motion: pause hero video instead of autoplaying.
+    const heroVideo = document.querySelector<HTMLVideoElement>('section video[autoplay]');
+    if (heroVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+    }
+  </script>
+</Base>
 
 <style>
   /* Ken Burns — subtle, respects reduced motion */

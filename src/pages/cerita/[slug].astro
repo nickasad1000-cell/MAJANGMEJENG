@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import { getStories, getStory, PILLAR_LABELS } from '../../lib/data';
+import { resolveImage } from '../../lib/images';
 
 const { slug } = Astro.params;
 const story = await getStory(slug!);
@@ -15,16 +17,29 @@ const date = new Date(story.published_at).toLocaleDateString('id-ID', { day: 'nu
 const paragraphs = story.body_md.split('\n\n').filter(Boolean);
 const words = story.body_md.split(/\s+/).length;
 const readMinutes = Math.max(1, Math.round(words / 200));
+const heroImg = resolveImage(story.hero_image);
+
+// dateModified = waktu terbaru antara publish dan create
+const modified = [story.published_at, story.created_at]
+  .filter(Boolean)
+  .sort()
+  .at(-1);
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: story.title,
   description: story.excerpt ?? undefined,
+  mainEntityOfPage: { '@type': 'WebPage', '@id': new URL(`/cerita/${story.slug}`, Astro.site).href },
   datePublished: story.published_at,
+  dateModified: modified,
   author: { '@type': 'Organization', name: 'Majang Mejeng' },
   image: story.hero_image ? new URL(story.hero_image, Astro.site).href : undefined,
-  publisher: { '@type': 'Organization', name: 'Majang Mejeng' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Majang Mejeng',
+    logo: { '@type': 'ImageObject', url: new URL('/logo-m.png', Astro.site).href },
+  },
 };
 
 export async function getStaticPaths() {
@@ -61,13 +76,15 @@ export async function getStaticPaths() {
       )}
     </header>
 
-    {story.hero_image && (
+    {heroImg && (
       <figure class="mx-auto mt-10 max-w-4xl">
-        <img
-          src={story.hero_image}
+        <Image
+          src={heroImg}
           alt={story.hero_image_alt ?? story.title}
-          width={1600}
-          height={900}
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 1024px) 896px, 100vw"
+          format="webp"
+          quality={80}
           loading="eager"
           fetchpriority="high"
           decoding="async"

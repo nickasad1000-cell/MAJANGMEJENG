@@ -8,8 +8,9 @@ interface Props {
   size?: number;
   variant?: 'orange' | 'white' | 'dark';
   class?: string;
+  eager?: boolean;
 }
-const { size = 48, variant = 'orange', class: className = '' } = Astro.props;
+const { size = 48, variant = 'orange', class: className = '', eager = false } = Astro.props;
 const src =
   variant === 'white' ? '/logo-m-white.png' : variant === 'dark' ? '/logo-m-dark.png' : '/logo-m.png';
 ---
@@ -22,6 +23,7 @@ const src =
   style={`width:${size}px;height:auto`}
   class={className}
   aria-hidden="true"
-  loading="lazy"
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : undefined}
   decoding="async"
 />

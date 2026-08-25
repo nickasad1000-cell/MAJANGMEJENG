@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { getLocations } from '../../lib/data';
+import { resolveImage } from '../../lib/images';
 
 const locations = await getLocations();
 
@@ -29,8 +31,21 @@ const photoFor = (slug: string) => LOC_PHOTOS[slug] ?? { src: '/products/kota-lu
         <a href={`/cerita?loc=${loc.slug}`} class="group block rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
           <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform hover:-translate-y-1">
             <div class="relative aspect-[4/3] overflow-hidden">
-              <img src={ph.src} alt={ph.alt} width={800} height={600} loading="lazy" decoding="async"
-                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              {resolveImage(ph.src) ? (
+                <Image
+                  src={resolveImage(ph.src)!}
+                  alt={ph.alt}
+                  widths={[400, 640, 800]}
+                  sizes="(min-width: 1024px) 29vw, (min-width: 768px) 45vw, 100vw"
+                  format="webp"
+                  quality={78}
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              ) : (
+                <div class="paper-grid absolute inset-0 opacity-40"></div>
+              )}
             </div>
             <div class="flex flex-1 flex-col p-5">
               <p class="eyebrow-neutral mb-2">{loc.district ?? 'LUMAJANG'}</p>

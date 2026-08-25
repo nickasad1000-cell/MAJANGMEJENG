@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { getProduct, getProducts, getWaNumber, waLink } from '../../lib/data';
+import { resolveImage } from '../../lib/images';
 
 const { slug } = Astro.params;
 const product = await getProduct(slug!);
@@ -9,6 +11,8 @@ if (!product) return Astro.redirect('/404');
 const others = (await getProducts()).filter((p) => p.id !== product.id).slice(0, 3);
 const wa = await getWaNumber();
 const orderMsg = waLink(wa, `Halo Majang Mejeng, saya ingin pesan:\n1. ${product.title} — Rp ${product.price_idr.toLocaleString('id-ID')} (${product.slug})\n\nMohon info ongkir & cara bayar. Terima kasih.`);
+const coverImg = resolveImage(product.cover_image);
+const fallbackImg = resolveImage('/photos/semeru-sunrise.jpg');
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -48,20 +52,19 @@ export async function getStaticPaths() {
 
     <div class="mt-8 grid items-start gap-10 md:grid-cols-2">
       <div class="overflow-hidden rounded-2xl border border-foreground/20 bg-surface-cream">
-        {product.cover_image ? (
-          <img
-            src={product.cover_image}
-            alt={product.title}
-            width={800}
-            height={800}
+        {(coverImg ?? fallbackImg) && (
+          <Image
+            src={coverImg ?? fallbackImg!}
+            alt={coverImg ? product.title : ''}
+            widths={[480, 720, 960]}
+            sizes="(min-width: 768px) 45vw, 100vw"
+            format="webp"
+            quality={80}
             loading="eager"
             fetchpriority="high"
             decoding="async"
             class="aspect-square w-full object-cover"
           />
-        ) : (
-          <img src="/photos/semeru-sunrise.jpg" alt="" width={800} height={800} loading="lazy" decoding="async"
-            class="aspect-square w-full object-cover" />
         )}
       </div>
 
@@ -93,8 +96,18 @@ export async function getStaticPaths() {
             <a href={`/toko/${p.slug}`} class="group block rounded-2xl" aria-label={`Lihat ${p.title}`}>
               <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform hover:-translate-y-1">
                 <div class="aspect-square w-full overflow-hidden bg-surface-cream">
-                  {p.cover_image ? (
-                    <img src={p.cover_image} alt={p.title} width={400} height={400} loading="lazy" decoding="async" class="h-full w-full object-cover" />
+                  {resolveImage(p.cover_image) ? (
+                    <Image
+                      src={resolveImage(p.cover_image)!}
+                      alt={p.title}
+                      widths={[320, 480]}
+                      sizes="(min-width: 768px) 29vw, 100vw"
+                      format="webp"
+                      quality={78}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover"
+                    />
                   ) : (
                     <div class="flex h-full w-full items-center justify-center text-foreground/40"><span class="font-serif text-sm italic">Foto</span></div>
                   )}

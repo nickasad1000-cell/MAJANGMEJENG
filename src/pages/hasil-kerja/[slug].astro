@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import { getCases, getServices } from '../../lib/data';
+import { resolveImage } from '../../lib/images';
 
 export async function getStaticPaths() {
   const cases = await getCases();
@@ -39,15 +41,19 @@ const jsonLd = {
     </p>
 
     <div class="mt-10 overflow-hidden rounded-2xl border border-foreground/20">
-      <img
-        src={c.cover_image ?? COVER_FALLBACK}
-        alt={`Proyek ${c.client}`}
-        width={1600}
-        height={900}
-        loading="eager"
-        decoding="async"
-        class="aspect-video w-full object-cover"
-      />
+      {(resolveImage(c.cover_image) ?? resolveImage(COVER_FALLBACK)) && (
+        <Image
+          src={(resolveImage(c.cover_image) ?? resolveImage(COVER_FALLBACK))!}
+          alt={`Proyek ${c.client}`}
+          widths={[640, 960, 1280]}
+          sizes="(min-width: 1024px) 1152px, 100vw"
+          format="webp"
+          quality={80}
+          loading="eager"
+          decoding="async"
+          class="aspect-video w-full object-cover"
+        />
+      )}
     </div>
 
     <section class="mt-12 max-w-3xl">

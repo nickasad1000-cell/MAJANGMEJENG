@@ -37,7 +37,7 @@ function isActive(href: string): boolean {
 <header class="sticky top-0 z-40 border-b border-foreground/15 bg-background/90 backdrop-blur-sm">
   <div class="container-mm flex items-center justify-between gap-4 py-3">
     <a href="/" class="flex items-center gap-3" aria-label="Majang Mejeng beranda">
-      <Mark size={52} class="md:!w-[60px]" />
+      <Mark size={52} eager class="md:!w-[60px]" />
       <span class="hidden font-serif text-xl font-semibold tracking-tight sm:inline">Majang Mejeng</span>
     </a>
     <span class="hidden h-8 w-px bg-foreground/20 xl:block" aria-hidden="true"></span>
@@ -147,55 +147,4 @@ function isActive(href: string): boolean {
     :global(html:not([data-theme='light'])) .dark-shown { display: inline; }
   }
 </style>
-<script>
-  // Jam WIB — Asia/Jakarta eksak via Intl (bukan jam device).
-  // Kedip titik dua via CSS; angka update tiap menit; pause saat tab hidden.
-  (function () {
-    const el = document.querySelector('[data-mm-clock]');
-    if (!el) return;
-    // WIB = UTC+7, dihitung manual (anti-ICU-missing), format HH:MM
-    function wib() {
-      const d = new Date();
-      const t = new Date(d.getTime() + (7 * 60 + d.getTimezoneOffset()) * 60000);
-      return String(t.getHours()).padStart(2, '0') + ':' + String(t.getMinutes()).padStart(2, '0');
-    }
-    let last = '';
-    function tick() {
-      const now = wib();
-      if (now !== last) {
-        last = now;
-        el.textContent = now;
-      }
-    }
-    tick();
-    let iv = setInterval(tick, 1000);
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { clearInterval(iv); }
-      else { tick(); iv = setInterval(tick, 1000); }
-    });
-  })();
-</script>
 
-<style>
-  /* Kedip halus titik dua jam — matikan kalau reduced-motion */
-  [data-mm-clock] { position: relative; }
-  @media (prefers-reduced-motion: no-preference) {
-    [data-mm-clock]::after {
-      content: '';
-      display: inline-block;
-      width: 1px;
-      height: 0.9em;
-      margin-left: 0.15em;
-      vertical-align: -0.12em;
-      background: #FF5500;
-      animation: mm-blink 1s steps(1) infinite;
-    }
-  }
-  @keyframes mm-blink {
-    0%, 60% { opacity: 1; }
-    61%, 100% { opacity: 0.15; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [data-mm-clock]::after { animation: none; opacity: 1; }
-  }
-</style>
