@@ -1,0 +1,197 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/*
+  MAJANG MEJENG — v3 Adventure Editorial
+  Brand orange #FF5500 everywhere. AAA body text preserved:
+  - body/muted text = dark green-black (AAA on cream)
+  - small orange text only on dark backgrounds (chip/label)
+  - orange on light = large display / bold UI only
+*/
+
+:root {
+  --orange: #FF5500;                       /* brand, exact logo color */
+  --color-background: oklch(94% 0.035 85);
+  --color-foreground: oklch(18% 0.045 165);        /* 12.9:1 on bg → AAA */
+  --color-card: oklch(97% 0.02 85);
+  --color-muted: oklch(89% 0.03 80);
+  --color-muted-foreground: oklch(30% 0.04 165);   /* 7.4:1 → AAA */
+  --color-border: oklch(70% 0.03 80);
+
+  --color-secondary: var(--orange-deep);   /* AA-safe orange for small text/links */
+  --color-secondary-foreground: #ffffff;
+  --orange-deep: #C2410C;                  /* 4.8:1 on cream — WCAG AA small text */
+  --color-accent: oklch(86% 0.12 40);
+  --color-primary: oklch(24% 0.055 165);
+  --color-primary-foreground: oklch(96% 0.02 80);
+  --color-destructive: oklch(42% 0.2 25);
+  --color-ring: var(--orange);
+
+  /* dark ink chip — small orange text lives here (white/orange on near-black = AA large+) */
+  --chip-bg: oklch(20% 0.04 40);
+  --surface-base: var(--color-background);
+  --surface-cream: oklch(91% 0.04 85);
+  --surface-orange: #FF5500;
+}
+
+[data-theme='dark'] {
+  --color-background: oklch(15% 0.02 60);
+  --color-foreground: oklch(93% 0.02 85);
+  --color-card: oklch(19% 0.025 60);
+  --color-muted: oklch(22% 0.025 60);
+  --color-muted-foreground: oklch(80% 0.03 70);    /* ~8:1 → AAA */
+  --color-border: oklch(36% 0.02 60);
+  --color-primary: oklch(90% 0.02 85);
+  --color-primary-foreground: oklch(15% 0.02 60);
+  --chip-bg: oklch(26% 0.05 40);
+  --surface-cream: oklch(21% 0.025 60);
+  --color-secondary: #FF8A5C;              /* bright orange on dark — AA-safe */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-background: oklch(15% 0.02 60);
+    --color-foreground: oklch(93% 0.02 85);
+    --color-card: oklch(19% 0.025 60);
+    --color-muted: oklch(22% 0.025 60);
+    --color-muted-foreground: oklch(80% 0.03 70);
+    --color-border: oklch(36% 0.02 60);
+    --color-primary: oklch(90% 0.02 85);
+    --color-primary-foreground: oklch(15% 0.02 60);
+    --chip-bg: oklch(26% 0.05 40);
+    --surface-cream: oklch(21% 0.025 60);
+    --color-secondary: #FF8A5C;
+  }
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-accent: var(--color-accent);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-destructive: var(--color-destructive);
+  --color-ring: var(--color-ring);
+
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+  --font-mono: 'DM Mono', ui-monospace, monospace;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  *, *::before, *::after { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background-color: var(--orange); color: #fff; }
+  :focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; border-radius: 2px; }
+  h1,h2,h3,h4 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.06;
+    text-wrap: balance;
+  }
+  h1 em,h2 em,h3 em { font-style: italic; font-weight: 500; }
+}
+
+@layer components {
+  .container-mm { @apply mx-auto w-full max-w-[88rem] px-5 md:px-8; }
+
+  /* Small label — white text on dark chip, orange accent dot. AAA-safe. */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5em;
+    background: var(--chip-bg); color: #fff;
+    font-size: 0.72rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 0.35em 0.9em; border-radius: 999px;
+  }
+  .eyebrow::before {
+    content: ''; width: 7px; height: 7px; border-radius: 999px;
+    background: var(--orange); flex-shrink: 0;
+  }
+
+  .zine-no {
+    font-family: var(--font-serif);
+    color: color-mix(in oklab, var(--orange) 55%, transparent);
+    line-height: 1; user-select: none;
+  }
+  /* zine-no di atas foto → beri shadow agar tetap terbaca */
+  .zine-no-on-photo { text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 2px rgba(0,0,0,.9); }
+
+  .paper-grid {
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--color-foreground) 8%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--color-foreground) 8%, transparent) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition;
+    background: var(--orange); color: #fff;
+    box-shadow: 4px 4px 0 rgba(0,0,0,.85);
+  }
+  .btn-primary:hover { transform: translate(-1px,-1px); box-shadow: 6px 6px 0 rgba(0,0,0,.85); }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 rounded-full border px-6 py-3 text-sm font-semibold transition;
+    border-color: color-mix(in oklab, var(--color-foreground) 55%, transparent);
+    color: var(--color-foreground);
+  }
+  .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+
+  .reveal-up { opacity: 0; transform: translateY(18px); }
+  .is-revealed { opacity: 1; transform: none; transition: opacity .6s var(--ease-out-expo), transform .6s var(--ease-out-expo); }
+  /* Failsafe: jika JS gagal/tertunda, konten tetap tampil setelah 2s */
+  @keyframes reveal-failsafe { to { opacity: 1; transform: none; } }
+  .reveal-up { animation: reveal-failsafe 0s 2s forwards; }
+
+  .prose-article > p:first-of-type::first-letter {
+    font-family: var(--font-serif);
+    font-weight: 700; float: left;
+    font-size: 4.4em; line-height: 0.82;
+    padding-right: 0.12em; padding-top: 0.06em;
+    color: var(--orange);
+  }
+
+  /* animated underline for nav/text links */
+  .link-fx { position: relative; }
+  .link-fx::after {
+    content: ''; position: absolute; left: 0; bottom: -3px;
+    width: 100%; height: 2px; background: var(--orange);
+    transform: scaleX(0); transform-origin: right;
+    transition: transform .3s var(--ease-out-expo);
+  }
+  .link-fx:hover::after, a[aria-current='page'].link-fx::after { transform: scaleX(1); transform-origin: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal-up { opacity: 1; transform: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+/* ===== P3: print texture noise overlay + print stylesheet ===== */
+.print-grain { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+@media print {
+  .print-grain, SiteHeader, header, footer, .btn-primary, .btn-outline { display: none !important; }
+  body { background: #fff !important; color: #111 !important; }
+  a { text-decoration: none; color: inherit; }
+  a[href^="http"]::after { content: ' (' attr(href) ')'; font-size: 0.75em; color: #555; }
+}

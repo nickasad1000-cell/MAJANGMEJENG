@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import BriefWizard from '../components/BriefWizard';
+import { getServices, getWaNumber } from '../lib/data';
+
+const services = await getServices();
+const wa = await getWaNumber();
+---
+
+<Base
+  title="Titipkan Cerita / Mulai Brief"
+  description="Punya cerita atau proyek dari Lumajang? Mulai dari satu percakapan singkat."
+  canonicalPath="/titipkan-cerita"
+>
+  <section class="container-mm py-14">
+    <div class="mx-auto max-w-xl">
+      <p class="eyebrow mb-2">MULAI BRIEF</p>
+      <h1 class="font-serif text-4xl tracking-tight md:text-5xl">
+        Tiga langkah, <em class="italic">langsung ngobrol</em>.
+      </h1>
+      <p class="mt-4 text-muted-foreground">
+        Ceritakan kebutuhanmu. Setelah dikirim, kamu bisa lanjut ke WhatsApp untuk
+        respons lebih cepat.
+      </p>
+
+      <div class="mt-10 rounded-2xl border border-foreground/20 bg-card p-6 md:p-8">
+        <BriefWizard client:visible waNumber={wa} services={services.map((s) => ({ id: s.id, title: s.title }))} />
+      </div>
+
+      <p class="mt-6 text-center text-sm text-muted-foreground">
+        Lebih suka langsung?{' '}
+        <a
+          href={`https://wa.me/${wa}?text=${encodeURIComponent('Halo Majang Mejeng, saya ingin mulai ngobrol.')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium text-secondary underline underline-offset-2"
+        >Chat tim Majang Mejeng via WhatsApp</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  @keyframes step-fwd { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+  @keyframes step-back { from { opacity: 0; transform: translateX(-14px); } to { opacity: 1; transform: none; } }
+  .mm-step-forward { animation: step-fwd 0.28s cubic-bezier(0.22,1,0.36,1); }
+  .mm-step-back { animation: step-back 0.28s cubic-bezier(0.22,1,0.36,1); }
+  @media (prefers-reduced-motion: reduce) {
+    .mm-step-forward, .mm-step-back { animation: none; }
+  }
+</style>

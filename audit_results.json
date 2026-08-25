@@ -1,0 +1,74 @@
+{
+  "/": {
+    "url": "https://majangmejeng.vercel.app/",
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.164268",
+      "SIZE_DOWNLOAD": "48034"
+    },
+    "body_len": 47977
+  },
+  "/jasa": {
+    "url": "https://majangmejeng.vercel.app/jasa",
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.201495",
+      "SIZE_DOWNLOAD": "26165"
+    },
+    "body_len": 26132
+  },
+  "/toko": {
+    "url": "https://majangmejeng.vercel.app/toko",
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.191903",
+      "SIZE_DOWNLOAD": "20826"
+    },
+    "body_len": 20805
+  },
+  "/cerita": {
+    "url": "https://majangmejeng.vercel.app/cerita",
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.147214",
+      "SIZE_DOWNLOAD": "31802"
+    },
+    "body_len": 31745
+  },
+  "/titipkan-cerita": {
+    "url": "https://majangmejeng.vercel.app/titipkan-cerita",
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.144614",
+      "SIZE_DOWNLOAD": "21730"
+    },
+    "body_len": 21715
+  },
+  "/cerita/sepeda-yang-tidak-pernah-dikunci": {
+    "url": "https://majangmejeng.vercel.app/cerita/sepeda-yang-tidak-pernah-dikunci",
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.498946",
+      "SIZE_DOWNLOAD": "17120"
+    },
+    "body_len": 17102
+  },
+  "/robots.txt": {
+    "url": null,
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.327373",
+      "SIZE_DOWNLOAD": "77"
+    },
+    "body_len": 77
+  },
+  "/sitemap.xml": {
+    "url": null,
+    "meta": {
+      "HTTP_CODE": "200",
+      "TIME_TOTAL": "0.231988",
+      "SIZE_DOWNLOAD": "3167"
+    },
+    "body_len": 3167
+  }
+}

@@ -1,0 +1,72 @@
+---
+import Base from '../../layouts/Base.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import { getStories, getLocations, PILLAR_LABELS } from '../../lib/data';
+
+const stories = await getStories();
+const locations = await getLocations();
+
+const PHOTOS = [
+  '/photos/semeru-sunrise.jpg', '/photos/volcano-mist-aerial.jpg', '/photos/horse-bromo.jpg',
+  '/photos/fields-mountain.jpg', '/photos/rice-terraces.jpg', '/photos/boat-sunrise.jpg',
+  '/photos/fishermen-nets.jpg', '/photos/forest-path-fog.jpg', '/photos/tangkuban-woman.jpg',
+];
+
+const { pillar, loc } = Astro.url.searchParams;
+const pillars = Object.keys(PILLAR_LABELS);
+
+let filtered = stories;
+if (pillar && pillars.includes(pillar)) filtered = filtered.filter((s) => s.pillar === pillar);
+if (loc) {
+  const locRow = locations.find((l) => l.slug === loc);
+  if (locRow) filtered = filtered.filter((s) => s.location_id === locRow.id);
+}
+
+const chip = (active: boolean) =>
+  `rounded-full border px-4 py-1.5 text-sm transition ${
+    active
+      ? 'border-transparent bg-foreground font-semibold text-background'
+      : 'border-foreground/30 text-muted-foreground hover:border-secondary hover:text-secondary'
+  }`;
+const chipSolid = (active: boolean) =>
+  `rounded-full border px-4 py-1.5 text-sm transition ${active ? 'border-transparent bg-foreground font-semibold text-background' : 'border-foreground/30 text-muted-foreground hover:border-secondary hover:text-secondary'}`;
+---
+
+<Base title="Arsip Cerita" description="Semua catatan Majang Mejeng — kawasan, orang, dan kebiasaan dari Lumajang." canonicalPath="/cerita">
+  <section class="container-mm py-14">
+    <p class="eyebrow mb-3 w-fit">ARSIP</p>
+    <h1 class="font-serif text-4xl tracking-tight md:text-6xl">
+      Semua yang <em class="italic">sudah kami tulis</em>.
+    </h1>
+
+    <div class="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter cerita">
+      <a href="/cerita" class={chip(!pillar && !loc)} aria-current={!pillar && !loc ? 'true' : undefined}>Semua</a>
+      {pillars.map((p) => (
+        <a href={`/cerita?pillar=${p}`} class={chip(pillar === p)} aria-current={pillar === p ? 'true' : undefined}>{PILLAR_LABELS[p]}</a>
+      ))}
+      {locations.map((l) => (
+        <a href={`/cerita?loc=${l.slug}`} class={chip(loc === l.slug)} aria-current={loc === l.slug ? 'true' : undefined}>◇ {l.name}</a>
+      ))}
+      <p class="ml-auto font-mono text-xs tabular-nums text-muted-foreground" role="status">{filtered.length} cerita</p>
+    </div>
+
+    {filtered.length === 0 ? (
+      <div class="mt-14 rounded-2xl border border-dashed border-foreground/30 p-12 text-center">
+        <p class="font-serif text-2xl">Belum ada cerita di sini.</p>
+        <p class="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+          Cerita untuk filter ini sedang ditulis. Coba filter lain atau lihat semua.
+        </p>
+        <a href="/cerita" class="btn-primary mt-5">Lihat semua cerita</a>
+      </div>
+    ) : (
+      /* asymmetric grid: first item spans wide */
+      <div class="mt-12 grid gap-6 md:grid-cols-12">
+        {filtered.map((story, idx) => (
+          <div class:list={['reveal-up', idx % 5 === 0 ? 'md:col-span-8' : 'md:col-span-4']}>
+            <StoryCard story={story} photo={PHOTOS[idx % PHOTOS.length]} large={idx % 5 === 0} />
+          </div>
+        ))}
+      </div>
+    )}
+  </section>
+</Base>

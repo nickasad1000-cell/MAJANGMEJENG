@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import Mark from '../components/Mark.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Majang Mejeng',
+  url: 'https://majangmejeng.vercel.app',
+  foundingDate: '2022',
+  address: { '@type': 'PostalAddress', addressLocality: 'Lumajang', addressRegion: 'Jawa Timur', addressCountry: 'ID' },
+};
+---
+
+<Base title="Tentang Kami" description="Majang Mejeng — jurnal lokal & studio kreatif dari Lumajang." canonicalPath="/tentang-kami" jsonLd={jsonLd}>
+  <section class="container-mm py-14">
+    <p class="eyebrow mb-2">TENTANG KAMI</p>
+    <h1 class="font-serif text-4xl tracking-tight md:text-6xl">
+      Ruang kecil untuk <em class="italic">cerita</em><br />
+      <em class="italic">yang besar artinya</em>.
+    </h1>
+
+    <div class="mt-12 grid gap-10 md:grid-cols-12">
+      <div class="prose-article md:col-span-7">
+        <p class="text-lg leading-[1.75] text-foreground/90">
+          Majang Mejeng berdiri di Lumajang — di antara Semeru dan pesisir selatan.
+          Kami adalah jurnal kecil dan studio kreatif: menulis, memproduksi video
+          pendek, dan merawat memori tempat lewat foto.
+        </p>
+        <p class="mt-6 text-lg leading-[1.75] text-muted-foreground">
+          Kami percaya yang dekat layak dirayakan, dan yang sederhana layak
+          didokumentasikan. Karena itu pekerjaan kami sering dimulai dari warung,
+          ladang, atau meja makan — tempat percakapan berlangsung tanpa agenda.
+        </p>
+      </div>
+
+      <aside class="rounded-2xl border border-foreground/20 bg-card p-6 md:col-span-5">
+        <Mark size={72} />
+        <dl class="mt-8 space-y-5 text-sm">
+          <div>
+            <dt class="eyebrow">BERDIRI</dt>
+            <dd class="mt-1 text-foreground/85">2022, Lumajang</dd>
+          </div>
+          <div>
+            <dt class="eyebrow">LOKASI</dt>
+            <dd class="mt-1 text-foreground/85">Lumajang, Jawa Timur</dd>
+          </div>
+          <div>
+            <dt class="eyebrow">MEDIA</dt>
+            <dd class="mt-1 text-foreground/85">Instagram, TikTok, dokumenter pendek</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+
+    {/* Manifesto band */}
+    <div class="mt-16 overflow-hidden rounded-2xl" style="background-color: var(--surface-orange);">
+      <div class="flex flex-col items-start gap-6 p-8 md:flex-row md:items-center md:justify-between md:p-10">
+        <h2 class="max-w-xl font-serif text-2xl leading-snug md:text-3xl">
+          Dunia terasa <em class="italic">lebih luas</em> ketika{' '}
+          <em class="italic">orang-orang terhubung</em>.
+        </h2>
+        <a href="/titipkan-cerita" class="hard-shadow shrink-0 rounded-full bg-foreground px-5 py-3 text-sm font-medium text-background transition hover:-translate-y-0.5">
+          Mulai diskusi <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

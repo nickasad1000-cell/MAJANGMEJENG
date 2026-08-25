@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getProduct, getProducts, getWaNumber, waLink } from '../../lib/data';
+
+const { slug } = Astro.params;
+const product = await getProduct(slug!);
+if (!product) return Astro.redirect('/404');
+
+const others = (await getProducts()).filter((p) => p.id !== product.id).slice(0, 3);
+const wa = await getWaNumber();
+const orderMsg = waLink(wa, `Halo Majang Mejeng, saya ingin pesan:\n1. ${product.title} — Rp ${product.price_idr.toLocaleString('id-ID')} (${product.slug})\n\nMohon info ongkir & cara bayar. Terima kasih.`);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: product.title,
+  description: product.description ?? undefined,
+  image: product.cover_image ? new URL(product.cover_image, Astro.site).href : undefined,
+  category: product.category,
+  brand: { '@type': 'Brand', name: 'Majang Mejeng' },
+  offers: {
+    '@type': 'Offer',
+    price: product.price_idr,
+    priceCurrency: 'IDR',
+    availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    url: new URL(`/toko/${product.slug}`, Astro.site).href,
+  },
+};
+
+export async function getStaticPaths() {
+  const all = await getProducts();
+  return all.map((r) => ({ params: { slug: r.slug }, props: { preloaded: r } }));
+}
+
+
+---
+
+<Base
+  title={product.title}
+  description={product.description}
+  canonicalPath={`/toko/${product.slug}`}
+  ogType="product"
+  ogImage={product.cover_image ?? '/og-image.png'}
+  jsonLd={jsonLd}
+>
+  <section class="container-mm py-14">
+    <a href="/toko" class="text-sm text-muted-foreground hover:text-secondary">← Kembali ke toko</a>
+
+    <div class="mt-8 grid items-start gap-10 md:grid-cols-2">
+      <div class="overflow-hidden rounded-2xl border border-foreground/20 bg-surface-cream">
+        {product.cover_image ? (
+          <img
+            src={product.cover_image}
+            alt={product.title}
+            width={800}
+            height={800}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            class="aspect-square w-full object-cover"
+          />
+        ) : (
+          <img src="/photos/semeru-sunrise.jpg" alt="" width={800} height={800} loading="lazy" decoding="async"
+            class="aspect-square w-full object-cover" />
+        )}
+      </div>
+
+      <div>
+        <p class="eyebrow mb-2">{product.category.toUpperCase()}</p>
+        <h1 class="font-serif text-4xl tracking-tight md:text-5xl">{product.title}</h1>
+        <p class="mt-4 font-mono text-2xl tabular-nums">Rp {product.price_idr.toLocaleString('id-ID')}</p>
+        <p class="mt-6 leading-relaxed text-muted-foreground">{product.description}</p>
+        <p class="mt-4 font-mono text-sm tabular-nums text-muted-foreground">
+          Stok: {product.stock > 0 ? `${product.stock} pcs` : 'habis — pesan dulu'}
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          {product.stock > 0 && (
+            <a href={orderMsg} target="_blank" rel="noopener noreferrer" class="btn-primary">
+              Pesan via WhatsApp <span aria-hidden="true">→</span>
+            </a>
+          )}
+          <a href="/toko" class="btn-outline">Lihat produk lain</a>
+        </div>
+      </div>
+    </div>
+
+    {others.length > 0 && (
+      <section class="mt-16" aria-label="Produk lainnya">
+        <h2 class="font-serif text-2xl tracking-tight">Benda lain yang mungkin kamu suka</h2>
+        <div class="mt-6 grid gap-6 md:grid-cols-3">
+          {others.map((p) => (
+            <a href={`/toko/${p.slug}`} class="group block rounded-2xl" aria-label={`Lihat ${p.title}`}>
+              <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform hover:-translate-y-1">
+                <div class="aspect-square w-full overflow-hidden bg-surface-cream">
+                  {p.cover_image ? (
+                    <img src={p.cover_image} alt={p.title} width={400} height={400} loading="lazy" decoding="async" class="h-full w-full object-cover" />
+                  ) : (
+                    <div class="flex h-full w-full items-center justify-center text-foreground/40"><span class="font-serif text-sm italic">Foto</span></div>
+                  )}
+                </div>
+                <div class="flex flex-1 flex-col p-4">
+                  <p class="eyebrow mb-1">{p.category.toUpperCase()}</p>
+                  <h3 class="font-serif text-lg leading-tight">{p.title}</h3>
+                  <p class="mt-auto pt-2 font-mono text-sm tabular-nums">Rp {p.price_idr.toLocaleString('id-ID')}</p>
+                </div>
+              </article>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </section>
+</Base>

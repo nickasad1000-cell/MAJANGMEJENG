@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getLocations } from '../../lib/data';
+
+const locations = await getLocations();
+
+// Foto spesifik per kecamatan — bukan pool generik
+const LOC_PHOTOS: Record<string, { src: string; alt: string }> = {
+  'kota-lumajang': { src: '/products/kota-lumajang.jpg', alt: 'Pemandangan udara Kota Lumajang dengan ladang dan pegunungan' },
+  'pasirian': { src: '/products/pasirian.jpg', alt: 'Perahu nelayan di dermaga pesisir selatan' },
+  'pronojiwo': { src: '/products/pronojiwo.jpg', alt: 'Kebun teh berkabut di lereng pegunungan' },
+  'ranuyoso': { src: '/products/ranuyoso.jpg', alt: 'Sawah bertingkat dan desa di kaki bukit' },
+  'senduro': { src: '/products/senduro.jpg', alt: 'Ladang di kaki gunung dengan lahan bercocok tanam' },
+};
+const photoFor = (slug: string) => LOC_PHOTOS[slug] ?? { src: '/products/kota-lumajang.jpg', alt: 'Pemandangan Lumajang' };
+---
+
+<Base title="Atlas Lokal" description="Peta kawasan yang sudah dan akan kami datangi di Lumajang." canonicalPath="/lokasi">
+  <section class="container-mm py-14">
+    <p class="eyebrow mb-2">ATLAS LOKAL</p>
+    <h1 class="font-serif text-4xl tracking-tight md:text-6xl">
+      Kawasan yang <em class="italic">kami catat</em>.
+    </h1>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {locations.map((loc, idx) => {
+        const ph = photoFor(loc.slug);
+        return (
+        <a href={`/cerita?loc=${loc.slug}`} class="group block rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+          <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform hover:-translate-y-1">
+            <div class="relative aspect-[4/3] overflow-hidden">
+              <img src={ph.src} alt={ph.alt} width={800} height={600} loading="lazy" decoding="async"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <p class="eyebrow-neutral mb-2">{loc.district ?? 'LUMAJANG'}</p>
+              <p class="font-serif text-2xl">{loc.name}</p>
+              {loc.blurb && <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{loc.blurb}</p>}
+            </div>
+          </article>
+        </a>
+        );
+      })}
+    </div>
+  </section>
+</Base>

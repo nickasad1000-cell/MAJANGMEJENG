@@ -1,0 +1,224 @@
+---
+/**
+ * DENGARKAN — Spotify-style collapsible playlist player.
+ * Self-hosted, royalty-free / public domain tracks.
+ * Collapsed by default (compact card) → tap to expand full playlist.
+ * Lazy: audio only downloads when a track is played.
+ */
+const TRACKS = [
+  { src: '/audio/beethoven-moonlight.mp3', title: 'Moonlight Sonata', artist: 'Beethoven', tag: 'KLASIK' },
+  { src: '/audio/chopin-nocturne-op9-2.mp3', title: 'Nocturne Op. 9 No. 2', artist: 'Chopin', tag: 'KLASIK' },
+  { src: '/audio/debussy-clair-de-lune.mp3', title: 'Clair de Lune', artist: 'Debussy', tag: 'KLASIK' },
+  { src: '/audio/satie-gymnopedie-1.mp3', title: 'Gymnopédie No. 1', artist: 'Satie', tag: 'KLASIK' },
+  { src: '/audio/kevin-macleod-carefree.mp3', title: 'Carefree', artist: 'Kevin MacLeod', tag: 'AKUSTIK' },
+  { src: '/audio/kevin-macleod-wholesome.mp3', title: 'Wholesome', artist: 'Kevin MacLeod', tag: 'AMBIEN' },
+];
+---
+
+<section id="dengarkan" class="container-mm py-20">
+  <div
+    class="mx-auto max-w-xl overflow-hidden rounded-2xl border border-foreground/20 bg-card"
+    data-player
+  >
+    {/* ===== Compact header — always visible ===== */}
+    <button
+      type="button"
+      data-toggle
+      class="flex w-full items-center gap-4 p-5 text-left transition hover:bg-secondary/5"
+      aria-expanded="false"
+      aria-controls="mm-playlist"
+    >
+      <span class="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-xl text-white" style="background:#FF5500" aria-hidden="true">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </span>
+      <span class="min-w-0 flex-1">
+        <span class="block font-serif text-lg font-semibold leading-tight">Musik untuk jalan pulang</span>
+        <span class="block truncate text-xs text-muted-foreground">Majang Mejeng · {TRACKS.length} lagu · bebas royalti · tanpa akun</span>
+      </span>
+      <svg data-chevron class="h-4 w-4 shrink-0 text-muted-foreground transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+
+    {/* ===== Collapsed now-playing bar (visible only while playing) ===== */}
+    <div data-nowbar hidden class="border-t border-foreground/10 px-5 py-3">
+      <div class="flex items-center gap-3">
+        <span class="relative flex h-9 w-9 shrink-0 items-center justify-center" aria-hidden="true">
+          <span class="absolute inset-0 animate-ping rounded-full bg-secondary/20" data-eq hidden></span>
+          <span class="flex h-9 w-9 items-center justify-center rounded-full text-white" style="background:#FF5500">
+            <svg data-np-icon class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </span>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="block truncate text-sm font-semibold" data-np-title></span>
+          <span class="block truncate text-xs text-muted-foreground" data-np-artist></span>
+        </span>
+        <button type="button" data-np-toggle aria-label="Putar / jeda" class="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/25">
+          <svg data-np-play class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg data-np-pause hidden class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+        </button>
+      </div>
+      <div class="mt-3 h-1 w-full overflow-hidden rounded-full bg-foreground/15">
+        <div data-progress class="h-full w-0 rounded-full transition-[width] duration-200" style="background:#FF5500"></div>
+      </div>
+    </div>
+
+    {/* ===== Full playlist — expands ===== */}
+    <ul id="mm-playlist" data-list hidden class="divide-y divide-foreground/10 border-t border-foreground/10" role="list">
+      {TRACKS.map((t, i) => (
+        <li>
+          <button
+            type="button"
+            data-track={t.src}
+            data-index={i}
+            class="flex w-full items-center gap-4 px-5 py-3.5 text-left transition hover:bg-secondary/5"
+            aria-label={`Putar ${t.title} — ${t.artist}`}
+          >
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-foreground/25" aria-hidden="true">
+              <svg class="hidden h-3 w-3 play-hover" viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1.2v9.6L10.5 6z"/></svg>
+              <svg class="hidden h-3 w-3 pause-icon" viewBox="0 0 12 12" fill="currentColor"><path d="M2.5 1h3v10h-3zM6.5 1h3v10h-3z"/></svg>
+              <span class="font-mono text-xs tabular-nums text-muted-foreground num-label">{String(i + 1).padStart(2, '0')}</span>
+            </span>
+            <span class="min-w-0 flex-1">
+              <span class="block truncate text-sm font-semibold" data-title>{t.title}</span>
+              <span class="block truncate text-xs text-muted-foreground">{t.artist}</span>
+            </span>
+            <span class="shrink-0 rounded-full border border-foreground/15 px-2 py-0.5 font-mono text-[10px] tracking-wider text-muted-foreground">{t.tag}</span>
+          </button>
+        </li>
+      ))}
+      <li class="px-5 py-3">
+        <p class="font-mono text-[10px] tracking-wider text-muted-foreground">
+          LAGU BEBAS ROYALTI / DOMAIN PUBLIK · PUTAR TANPA AKUN
+        </p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* Row hover: swap number → play icon */
+  [data-player] li button:hover .num-label { display: none; }
+  [data-player] li button:hover .play-hover { display: block; }
+  [data-player] li button[data-active] .num-label,
+  [data-player] li button[data-active] .play-hover { display: none; }
+  [data-player] li button[data-active] .pause-icon { display: block; }
+  @media (prefers-reduced-motion: reduce) {
+    [data-eq] { animation: none !important; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-player]');
+  if (root) {
+    const audio = new Audio();
+    audio.preload = 'none';
+
+    const toggleBtn = root.querySelector<HTMLButtonElement>('[data-toggle]');
+    const chevron = root.querySelector<SVGElement>('[data-chevron]');
+    const list = root.querySelector<HTMLElement>('[data-list]');
+    const nowbar = root.querySelector<HTMLElement>('[data-nowbar]');
+    const npTitle = root.querySelector<HTMLElement>('[data-np-title]');
+    const npArtist = root.querySelector<HTMLElement>('[data-np-artist]');
+    const npIcon = root.querySelector<SVGElement>('[data-np-icon]');
+    const npPlay = root.querySelector<SVGElement>('[data-np-play]');
+    const npPause = root.querySelector<SVGElement>('[data-np-pause]');
+    const npToggle = root.querySelector<HTMLButtonElement>('[data-np-toggle]');
+    const eq = root.querySelector<HTMLElement>('[data-eq]');
+    const progress = root.querySelector<HTMLElement>('[data-progress]');
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-track]'));
+
+    let current: HTMLButtonElement | null = null;
+
+    /* Expand / collapse playlist */
+    toggleBtn?.addEventListener('click', () => {
+      const open = list?.hasAttribute('hidden');
+      if (!list) return;
+      if (open) {
+        list.removeAttribute('hidden');
+        chevron?.style.setProperty('transform', 'rotate(180deg)');
+      } else {
+        list.setAttribute('hidden', '');
+        chevron?.style.removeProperty('transform');
+      }
+      toggleBtn.setAttribute('aria-expanded', String(!!open));
+    });
+
+    const resetRows = () => {
+      buttons.forEach((b) => {
+        delete b.dataset.active;
+        b.querySelector('.pause-icon')?.classList.add('hidden');
+        b.querySelector('.num-label')?.classList.remove('hidden');
+      });
+    };
+
+    const showPlaying = () => {
+      if (npTitle && current) {
+        const title = current.querySelector('[data-title]')?.textContent ?? '';
+        npTitle.textContent = title;
+        npArtist!.textContent = current.getAttribute('aria-label')?.replace(/^Putar /, '').split(' — ')[1] ?? '';
+      }
+      nowbar?.removeAttribute('hidden');
+    };
+
+    const setPlayingUI = (playing: boolean) => {
+      npPlay?.classList.toggle('hidden', playing);
+      npPause?.classList.toggle('hidden', !playing);
+      eq?.toggleAttribute('hidden', !playing);
+      if (npIcon) {
+        npIcon.querySelector('path')?.setAttribute('d', playing ? 'M6 5h4v14H6zM14 5h4v14h-4z' : 'M8 5v14l11-7z');
+      }
+      if (current) {
+        current.querySelector('.pause-icon')?.classList.toggle('hidden', !playing);
+        current.querySelector('.num-label')?.classList.toggle('hidden', playing);
+      }
+    };
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const sameTrack = current === btn;
+        if (sameTrack && !audio.paused) {
+          audio.pause();
+          setPlayingUI(false);
+          return;
+        }
+        if (!sameTrack) {
+          current = btn;
+          resetRows();
+          btn.dataset.active = 'true';
+          audio.src = btn.dataset.track ?? '';
+          showPlaying();
+        }
+        audio.play().catch(() => {});
+        setPlayingUI(true);
+      });
+    });
+
+    npToggle?.addEventListener('click', () => {
+      if (!audio.src) {
+        buttons[0]?.click();
+        return;
+      }
+      if (audio.paused) {
+        audio.play().catch(() => {});
+        setPlayingUI(true);
+      } else {
+        audio.pause();
+        setPlayingUI(false);
+      }
+    });
+
+    audio.addEventListener('timeupdate', () => {
+      if (audio.duration && progress) {
+        progress.style.width = `${(audio.currentTime / audio.duration) * 100}%`;
+      }
+    });
+
+    audio.addEventListener('ended', () => {
+      /* auto-advance to next track, Spotify-style */
+      if (current) {
+        const idx = Number(current.dataset.index) ?? 0;
+        const next = buttons[(idx + 1) % buttons.length];
+        if (next) next.click();
+      }
+    });
+  }
+</script>

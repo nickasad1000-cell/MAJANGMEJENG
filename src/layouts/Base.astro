@@ -1,0 +1,145 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  canonicalPath?: string;
+  ogType?: string;
+  ogImage?: string;
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title,
+  description = 'Majang Mejeng adalah jurnal lokal dan studio kreatif dari Lumajang, Jawa Timur. Kami membuat cerita tentang kawasan, orang, dan kebiasaan dari dekat.',
+  canonicalPath = '/',
+  ogType = 'website',
+  ogImage = '/og-image.png',
+  jsonLd,
+} = Astro.props;
+
+const canonical = new URL(canonicalPath, Astro.site).href;
+const ogAbs = new URL(ogImage, Astro.site).href;
+const fullTitle = title.includes('Majang Mejeng') ? title : `${title} — Majang Mejeng`;
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FF5500" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Majang Mejeng" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogAbs} />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogAbs} />
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400&family=DM+Sans:wght@400;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    {/* Theme boot — no flash */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('mm-theme');
+          if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {!jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Majang Mejeng',
+        alternateName: 'Majang Mejeng — Jurnal Lokal Lumajang',
+        url: Astro.site?.href,
+        inLanguage: 'id-ID',
+        publisher: {
+          '@type': 'Organization',
+          name: 'Majang Mejeng',
+          url: Astro.site?.href,
+          logo: { '@type': 'ImageObject', url: new URL('/logo-m.png', Astro.site).href },
+        },
+      })} />
+    )}
+  </head>
+  <body class="min-h-screen">
+    <div class="print-grain" aria-hidden="true"></div>
+    <a
+      href="#konten-utama"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-secondary focus:px-4 focus:py-2 focus:text-sm focus:text-secondary-foreground"
+    >
+      Lewati ke konten
+    </a>
+    <SiteHeader />
+    <main id="konten-utama">
+      <slot />
+    </main>
+    <SiteFooter />
+    <CookieBanner />
+
+    {/* Scroll reveal — progressive enhancement */}
+    <script>
+      // Service worker — offline reading (PWA minimal)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+      }
+    </script>
+    <script>
+      const els = document.querySelectorAll('.reveal-up');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('is-revealed');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px' }
+        );
+        els.forEach((el, i) => {
+          el.style.transitionDelay = `${(i % 3) * 80}ms`;
+          io.observe(el);
+        });
+      } else {
+        els.forEach((el) => el.classList.add('is-revealed'));
+      }
+    </script>
+  </body>
+</html>

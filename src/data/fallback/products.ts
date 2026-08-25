@@ -1,0 +1,88 @@
+import type { Product } from '../../lib/data';
+
+export const FALLBACK_PRODUCTS: Product[] = [
+  {
+    id: 'prod-kaos-atlas',
+    slug: 'kaos-atlas-lumajang',
+    title: 'Kaos Atlas Lumajang',
+    category: 'merchandise',
+    price_idr: 175000,
+    description:
+      'Kaos katun combed 30s sablon plastisol premium. Desain peta artistik 5 kecamatan ikonik Lumajang (Senduro, Lumajang, Tempeh, Pasirian, Kedungjajang). Potong oversized unisex, warna cream natural. Cocok sehari-hari & dokumentasi lapangan.',
+    cover_image: '/products/kaos-atlas-lumajang.jpg',
+    gallery: [],
+    stock: 24,
+    active: true,
+    created_at: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-poster-semeru',
+    slug: 'poster-semeru',
+    title: 'Poster Semeru A2',
+    category: 'print',
+    price_idr: 95000,
+    description:
+      'Poster A2 (42×59,4 cm) digital print kertas matte 200gsm. Visual puncak Semeru saat golden hour dari Ranu Kumbolo. Edisi terbatas 50 lembar, ditandatangani fotografer. Siap bingkai standar A2.',
+    cover_image: '/products/poster-semeru.jpg',
+    gallery: [],
+    stock: 100,
+    active: true,
+    created_at: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-zine',
+    slug: 'zine-senduro',
+    title: 'Zine Senduro #01',
+    category: 'print',
+    price_idr: 65000,
+    description:
+      'Zine offset 24 halaman, ukuran A5 (14,8×21 cm). Kumpulan foto analog & catatan lapangan dari Senduro: warung kopi jam 4 pagi, petani tengkleng, jejak gunung, dan percakapan di pinggir jalan. Cover karton 310gsm soft-touch, isi 100gsm uncoated.',
+    cover_image: '/products/zine-senduro.jpg',
+    gallery: [],
+    stock: 18,
+    active: true,
+    created_at: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-bundle',
+    slug: 'bundle-rilis',
+    title: 'Bundle Rilis Majang',
+    category: 'bundle',
+    price_idr: 320000,
+    description:
+      'Paket hemat: 1 Kaos Atlas Lumajang + 1 Poster Semeru A2 + 1 Zine Senduro #01. Hemat Rp 15.000 dari harga satuan. Dikemas dalam kotak kraft custom stempel tangan. Cocok hadian atau koleksi pribadi.',
+    cover_image: '/products/bundle-rilis.jpg',
+    gallery: [],
+    stock: 8,
+    active: true,
+    created_at: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-sticker',
+    slug: 'sticker-set',
+    title: 'Sticker Set Majang',
+    category: 'merchandise',
+    price_idr: 25000,
+    description:
+      'Set 6 sticker vinyl matte anti-air & UV: Gunung Semeru, Perahu Nelayan, Kopi Tubruk, Mie Ayam Lumajang, Kucing Kampung, Rambu "Mejeng". Ukuran 5-7 cm per sticker. Tempel di laptop, botol, motor, jurnal.',
+    cover_image: '/products/sticker-set.jpg',
+    gallery: [],
+    stock: 80,
+    active: true,
+    created_at: '2026-01-01T00:00:00.000Z',
+  },
+  {
+    id: 'prod-pin',
+    slug: 'pin-rantai',
+    title: 'Pin Rantai "Mejeng"',
+    category: 'merchandise',
+    price_idr: 35000,
+    description:
+      'Pin enamel soft 3×3 cm tulisan "Mejeng" font brush hand-drawn. Plating emas antik, double clutch backing. Cocok jaket denim, tote bag, topi, strap kamera. Edisi terbatas 100 pcs.',
+    cover_image: '/products/pin-rantai.jpg',
+    gallery: [],
+    stock: 60,
+    active: true,
+    created_at: '2026-01-01T00:00:00.000Z',
+  },
+];

@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import { getStories } from '../lib/data';
+
+// 404 with popular stories — keep visitors around
+const popular = (await getStories()).slice(0, 3);
+---
+
+<Base title="Halaman Tidak Ditemukan" description="Halaman yang Anda cari tidak ada." canonicalPath="/404">
+  <section class="container-mm py-24 text-center">
+    <p class="zine-no text-[8rem] leading-none md:text-[12rem]">404</p>
+    <p class="eyebrow mt-2">HALAMAN TIDAK DITEMUKAN</p>
+    <h1 class="mx-auto mt-4 max-w-xl font-serif text-3xl tracking-tight md:text-4xl">
+      Halaman ini <em class="italic">belum ada</em>.
+    </h1>
+    <p class="mx-auto mt-4 max-w-md text-muted-foreground">
+      Mungkin tautannya sudah berganti, atau cerita belum sempat ditulis.
+    </p>
+    <div class="mt-7 flex flex-wrap justify-center gap-3">
+      <a href="/" class="btn-primary">Kembali ke beranda</a>
+      <a href="/cerita" class="btn-outline">Jelajahi arsip cerita</a>
+    </div>
+
+    {popular.length > 0 && (
+      <div class="mx-auto mt-14 max-w-2xl border-t border-foreground/15 pt-10 text-left">
+        <p class="eyebrow-neutral mb-4 text-center">SEMENTARA ITU, BACA INI</p>
+        <ul class="divide-y divide-foreground/15">
+          {popular.map((s) => (
+            <li>
+              <a href={`/cerita/${s.slug}`} class="group flex items-center justify-between gap-3 py-3">
+                <span class="font-medium transition group-hover:text-secondary">{s.title}</span>
+                <span aria-hidden="true" class="text-secondary transition group-hover:translate-x-0.5">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </section>
+</Base>

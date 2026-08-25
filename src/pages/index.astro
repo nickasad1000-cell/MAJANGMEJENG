@@ -1,0 +1,232 @@
+---
+import Base from '../layouts/Base.astro';
+import Mark from '../components/Mark.astro';
+import StoryCard from '../components/StoryCard.astro';
+import Dengarkan from '../components/Dengarkan.astro';
+import { getStories, getLocations, getWaNumber, waLink } from '../lib/data';
+
+const stories = await getStories();
+const locations = await getLocations();
+const wa = await getWaNumber();
+
+const dayIndex = Math.floor(Date.now() / 86_400_000);
+const featured = stories[dayIndex % stories.length];
+const rest = stories.filter((s) => s.id !== featured?.id);
+
+// Photo pool — no overlap with Perjalanan section (volcano/fields/boat reserved there)
+const PHOTOS = [
+  '/photos/mm-village-morning.jpg',
+  '/photos/mm-jalan-desa.jpg',
+  '/photos/horse-bromo.jpg',
+  '/photos/rice-terraces.jpg',
+  '/photos/mm-teh-kebun.jpg',
+  '/photos/fishermen-nets.jpg',
+  '/photos/forest-path-fog.jpg',
+  '/photos/mm-pasar-tradisional.jpg',
+  '/photos/tangkuban-woman.jpg',
+];
+const photoFor = (i: number) => PHOTOS[i % PHOTOS.length];
+
+const orgJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Majang Mejeng',
+  description: 'Jurnal lokal & studio kreatif dari Lumajang, Jawa Timur.',
+  url: 'https://majangmejeng.vercel.app',
+  areaServed: 'Lumajang, Jawa Timur',
+  sameAs: ['https://instagram.com/majangmejeng_'],
+};
+---
+
+<Base title="Majang Mejeng — Jurnal lokal & studio kreatif dari Lumajang" canonicalPath="/" jsonLd={orgJsonLd}>
+  {/* ============ HERO — full-bleed photo + Ken Burns + giant type ============ */}
+  <section class="relative min-h-[100svh] max-h-[140svh] overflow-hidden md:max-h-none">
+    <div class="absolute inset-0 overflow-hidden" aria-hidden="true">
+      <video
+        class="h-full w-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        poster="/photos/semeru-sunrise.jpg"
+      >
+        <source src="/videos/hero-clouds.mp4" type="video/mp4" />
+      </video>
+      <noscript>
+        <img src="/photos/semeru-sunrise.jpg" alt="" class="ken-burns h-full w-full object-cover" />
+      </noscript>
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/70" aria-hidden="true"></div>
+
+    <div class="container-mm relative flex min-h-[100svh] max-h-[140svh] flex-col justify-end pb-16 md:max-h-none md:pb-24">
+      <div class="mb-5 flex flex-wrap items-center gap-3">
+        <p class="eyebrow w-fit">JURNAL LOKAL / LUMAJANG</p>
+
+      </div>
+      <h1 class="max-w-5xl font-serif text-[clamp(3.2rem,9.5vw,9rem)] font-semibold leading-[0.98] tracking-tight text-white">
+        Yang dekat,<br />
+        <em class="italic" style="color:#FF5500">jadi berarti</em>.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/90 md:text-xl">
+        Kami menulis catatan dari warung, ladang, dan ruang kecil yang sering
+        luput dari berita besar.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/cerita" class="btn-primary">Baca cerita <span aria-hidden="true">→</span></a>
+        <a
+          href={waLink(wa, 'Halo Majang Mejeng, saya ingin membicarakan proyek.')}
+          target="_blank" rel="noopener noreferrer"
+          class="btn-outline !border-white/60 !text-white hover:!border-white hover:!text-white"
+        >Mulai brief</a>
+      </div>
+    </div>
+  </section>
+
+  {/* ============ CERITA — asymmetric editorial grid ============ */}
+  <section class="container-mm py-20">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow mb-3 w-fit">CERITA TERBARU</p>
+        <h2 class="font-serif text-4xl tracking-tight md:text-6xl">
+          Yang baru <em class="italic">kami tulis</em>.
+        </h2>
+      </div>
+      <a href="/cerita" class="link-fx hidden text-sm font-medium md:inline-flex">Lihat semua →</a>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-12">
+      {featured && (
+        <div class="reveal-up md:col-span-8">
+          <StoryCard story={featured} photo={photoFor(0)} large />
+        </div>
+      )}
+      <div class="reveal-up flex flex-col gap-6 md:col-span-4">
+        {rest.slice(0, 2).map((story, i) => (
+          <StoryCard story={story} photo={photoFor(i + 1)} />
+        ))}
+      </div>
+      {rest.slice(2, 5).map((story, i) => (
+        <div class="reveal-up md:col-span-4">
+          <StoryCard story={story} photo={photoFor(i + 3)} />
+        </div>
+      ))}
+    </div>
+    <a href="/cerita" class="link-fx mt-8 inline-flex text-sm font-medium md:hidden">Lihat semua cerita →</a>
+  </section>
+
+  {/* ============ PERJALANAN — editorial photo triptych ============ */}
+  <section class="border-y border-foreground/15 bg-surface-cream py-20">
+    <div class="container-mm">
+      <p class="eyebrow mb-3 w-fit">PERJALANAN</p>
+      <h2 class="max-w-3xl font-serif text-4xl tracking-tight md:text-6xl">
+        Jalan setapak, kabut pagi, <em class="italic">dan jalan pulang</em>.
+      </h2>
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        {[
+          { src: '/photos/volcano-mist-aerial.jpg', alt: 'Kabut pagi di lereng gunung', label: 'PEAK / KABUT PAGI' },
+          { src: '/photos/fields-mountain.jpg', alt: 'Jalur setapak di antara ladang', label: 'JALUR SETAPAK' },
+          { src: '/photos/boat-sunrise.jpg', alt: 'Perahu saat matahari terbit di pelabuhan', label: 'PELABUHAN / SORE' },
+        ].map((v, i) => (
+          <figure class="reveal-up group overflow-hidden rounded-2xl border border-foreground/15 bg-card">
+            <div class="aspect-video overflow-hidden">
+              <img
+                src={v.src}
+                alt={v.alt}
+                width={800} height={450} loading="lazy" decoding="async"
+                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <figcaption class="flex items-center justify-between p-4">
+              <span class="font-mono text-xs font-semibold tracking-wider text-muted-foreground">{v.label}</span>
+              <span class="zine-no text-2xl">0{i + 1}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* ============ ATLAS LOKAL ============ */}
+  {locations.length > 0 && (
+    <section class="container-mm py-20">
+      <p class="eyebrow mb-3 w-fit">ATLAS LOKAL</p>
+      <h2 class="font-serif text-4xl tracking-tight md:text-6xl">
+        Tempat yang <em class="italic">kami datangi</em>.
+      </h2>
+      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {locations.slice(0, 3).map((loc, idx) => (
+          <a href={`/cerita?loc=${loc.slug}`} class="group block rounded-2xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+            <article class="flex h-full flex-col overflow-hidden rounded-2xl border border-foreground/20 bg-card transition-transform duration-300 hover:-translate-y-1">
+              <div class="relative aspect-[4/3] overflow-hidden">
+                <img
+                  src={photoFor(idx + 5)}
+                  alt={`Pemandangan ${loc.name}`}
+                  width={800} height={600} loading="lazy" decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div class="flex flex-1 flex-col p-5">
+                <p class="eyebrow mb-2 w-fit">{loc.district ?? 'LUMAJANG'}</p>
+                <p class="font-serif text-2xl">{loc.name}</p>
+                {loc.blurb && <p class="mt-2 line-clamp-2 text-sm text-muted-foreground">{loc.blurb}</p>}
+              </div>
+            </article>
+          </a>
+        ))}
+      </div>
+      <a href="/lokasi" class="link-fx mt-8 inline-flex text-sm font-medium">Semua kawasan →</a>
+    </section>
+  )}
+
+  {/* ============ DENGARKAN — self-hosted audio player (no login) ============ */}
+  <Dengarkan />
+
+  {/* ============ MANIFESTO — full-bleed orange ============ */}
+  <section class="text-white" style="background:#FF5500" id="manifesto">
+    <div class="container-mm grid items-center gap-10 py-20 md:grid-cols-12">
+      <div class="md:col-span-8">
+        <h2 class="font-serif text-4xl font-semibold leading-snug tracking-tight md:text-6xl">
+          Ruang kecil untuk<br />
+          <em class="italic">besar artinya</em>.
+        </h2>
+        <p class="mt-5 max-w-lg text-lg text-white/90">
+          Satu percakapan singkat bisa jadi titik awal. Tidak ada paket tersembunyi,
+          tidak ada syarat minimum.
+        </p>
+        <a
+          href={waLink(wa, 'Halo Majang Mejeng, saya ingin mulai ngobrol.')}
+          target="_blank" rel="noopener noreferrer"
+          class="mt-8 inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
+        >
+          Buka percakapan WhatsApp <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="hidden justify-center md:col-span-4 md:flex">
+        <Mark size={200} variant="white" class="opacity-90" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Respect prefers-reduced-motion: pause hero video instead of autoplaying.
+  const heroVideo = document.querySelector<HTMLVideoElement>('section video[autoplay]');
+  if (heroVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    heroVideo.removeAttribute('autoplay');
+    heroVideo.pause();
+  }
+</script>
+
+<style>
+  /* Ken Burns — subtle, respects reduced motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .ken-burns {
+      animation: kenburns 28s ease-in-out infinite alternate;
+    }
+  }
+  @keyframes kenburns {
+    from { transform: scale(1) translateY(0); }
+    to { transform: scale(1.12) translateY(-2%); }
+  }
+</style>

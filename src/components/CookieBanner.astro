@@ -1,0 +1,29 @@
+---
+/**
+ * Cookie notice — honest, local-only. Preference stored in localStorage.
+ */
+---
+
+<div id="cookie-banner" hidden class="fixed bottom-3 left-3 right-3 z-50 sm:right-auto sm:max-w-xs" role="region" aria-label="Pemberitahuan cookie">
+  <div class="flex items-start gap-3 rounded-xl border border-foreground/20 bg-card px-4 py-3 shadow-lg">
+    <p class="flex-1 text-xs leading-relaxed text-muted-foreground">
+      Tanpa pelacakan — hanya preferensi tema, disimpan lokal.
+      <a href="/privacy" class="text-secondary underline underline-offset-2">Privasi</a>.
+    </p>
+    <button id="cookie-ok" type="button" class="btn-primary shrink-0 !px-3 !py-1.5 text-xs">OK</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    try {
+      if (!localStorage.getItem('mm-cookie-ok')) {
+        document.getElementById('cookie-banner')?.removeAttribute('hidden');
+      }
+      document.getElementById('cookie-ok')?.addEventListener('click', () => {
+        localStorage.setItem('mm-cookie-ok', '1');
+        document.getElementById('cookie-banner')?.setAttribute('hidden', '');
+      });
+    } catch {}
+  })();
+</script>

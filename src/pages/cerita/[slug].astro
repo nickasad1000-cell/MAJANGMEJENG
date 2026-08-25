@@ -1,0 +1,138 @@
+---
+import Base from '../../layouts/Base.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import { getStories, getStory, PILLAR_LABELS } from '../../lib/data';
+
+const { slug } = Astro.params;
+const story = await getStory(slug!);
+
+if (!story) {
+  return Astro.redirect('/404');
+}
+
+const related = (await getStories()).filter((r) => r.id !== story.id && r.pillar === story.pillar).slice(0, 3);
+const date = new Date(story.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+const paragraphs = story.body_md.split('\n\n').filter(Boolean);
+const words = story.body_md.split(/\s+/).length;
+const readMinutes = Math.max(1, Math.round(words / 200));
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: story.title,
+  description: story.excerpt ?? undefined,
+  datePublished: story.published_at,
+  author: { '@type': 'Organization', name: 'Majang Mejeng' },
+  image: story.hero_image ? new URL(story.hero_image, Astro.site).href : undefined,
+  publisher: { '@type': 'Organization', name: 'Majang Mejeng' },
+};
+
+export async function getStaticPaths() {
+  const all = await getStories();
+  return all.map((r) => ({ params: { slug: r.slug }, props: { preloaded: r } }));
+}
+
+
+---
+
+<Base
+  title={story.title}
+  description={story.excerpt ?? undefined}
+  canonicalPath={`/cerita/${story.slug}`}
+  ogType="article"
+  ogImage={story.hero_image ?? '/og-image.png'}
+  jsonLd={jsonLd}
+>
+  <article class="container-mm py-14">
+    <header class="mx-auto max-w-3xl">
+      <p class="eyebrow mb-3">CERITA / {PILLAR_LABELS[story.pillar].toUpperCase()}</p>
+      <h1 class="font-serif text-[clamp(2.2rem,5.5vw,4rem)] font-semibold leading-[1.05] tracking-tight">
+        {story.title}
+      </h1>
+      <p class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-sm tabular-nums text-muted-foreground">
+        <span>{date}</span>
+        <span aria-hidden="true">·</span>
+        <span>{readMinutes} mnt baca</span>
+      </p>
+      {story.excerpt && (
+        <p class="mt-6 max-w-2xl border-l-2 border-secondary pl-5 text-xl leading-relaxed text-muted-foreground">
+          {story.excerpt}
+        </p>
+      )}
+    </header>
+
+    {story.hero_image && (
+      <figure class="mx-auto mt-10 max-w-4xl">
+        <img
+          src={story.hero_image}
+          alt={story.hero_image_alt ?? story.title}
+          width={1600}
+          height={900}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          class="aspect-[16/9] w-full rounded-2xl border border-foreground/15 object-cover"
+        />
+      </figure>
+    )}
+
+    {/* Article body — drop cap + AAA prose */}
+    <div class="prose-article mx-auto mt-12 max-w-2xl">
+      {paragraphs.map((para) => (
+        <p class="mt-6 text-lg leading-[1.75] text-foreground/90 first:mt-0">{para}</p>
+      ))}
+    </div>
+
+    {story.platform_url && story.platform && (
+      <div class="mx-auto mt-12 max-w-2xl">
+        <a href={story.platform_url} target="_blank" rel="noopener noreferrer" class="btn-outline">
+          {story.platform === 'instagram' && 'Lihat di Instagram'}
+          {story.platform === 'tiktok' && 'Lihat di TikTok'}
+          {story.platform === 'youtube' && 'Tonton di YouTube'}
+          {(!['instagram', 'tiktok', 'youtube'].includes(story.platform)) && 'Baca versi lengkap'}
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    )}
+
+    {/* Share */}
+    <div class="mx-auto mt-10 flex max-w-2xl items-center gap-3 border-t border-foreground/15 pt-8">
+      <button id="share-btn" type="button" class="btn-primary !px-4 !py-2">
+        Bagikan <span aria-hidden="true">↗</span>
+      </button>
+      <a
+        id="share-wa"
+        href={`https://wa.me/?text=${encodeURIComponent((story.title + ' — Majang Mejeng ') )}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center rounded-full border border-foreground/25 px-4 py-2 text-sm transition hover:border-secondary hover:text-secondary"
+      >WhatsApp</a>
+      <a href="/cerita" class="text-sm text-muted-foreground hover:text-secondary">← Kembali ke arsip</a>
+    </div>
+
+    {/* Related */}
+    {related.length > 0 && (
+      <section class="mx-auto mt-16 max-w-5xl" aria-label="Cerita terkait">
+        <h2 class="font-serif text-2xl tracking-tight">Baca juga</h2>
+        <div class="mt-6 grid gap-6 md:grid-cols-3">
+          {related.map((r) => (
+            <StoryCard story={r} />
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+
+  <script>
+    document.getElementById('share-wa')?.setAttribute('href', 'https://wa.me/?text=' + encodeURIComponent(document.title + ' ' + location.href));
+    document.getElementById('share-btn')?.addEventListener('click', async () => {
+      const url = location.href;
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, url }); } catch {}
+      } else {
+        await navigator.clipboard?.writeText(url);
+        alert('Tautan disalin.');
+      }
+    });
+  </script>
+</Base>

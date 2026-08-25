@@ -1,0 +1,27 @@
+---
+/**
+ * Brand mark — the REAL cropped brush M from the original logo.png.
+ * variant: 'orange' (original) | 'white' | 'dark'
+ * Transparent PNG, works on light and dark backgrounds.
+ */
+interface Props {
+  size?: number;
+  variant?: 'orange' | 'white' | 'dark';
+  class?: string;
+}
+const { size = 48, variant = 'orange', class: className = '' } = Astro.props;
+const src =
+  variant === 'white' ? '/logo-m-white.png' : variant === 'dark' ? '/logo-m-dark.png' : '/logo-m.png';
+---
+
+<img
+  src={src}
+  alt=""
+  width={238}
+  height={240}
+  style={`width:${size}px;height:auto`}
+  class={className}
+  aria-hidden="true"
+  loading="lazy"
+  decoding="async"
+/>
