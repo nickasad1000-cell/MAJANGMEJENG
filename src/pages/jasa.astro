@@ -40,7 +40,7 @@ const jsonLd = {
       {services.map((svc, idx) => (
         <li class="reveal-up">
           <article class="flex h-full flex-col rounded-2xl border border-foreground/20 bg-card p-6 transition-transform duration-300 hover:-translate-y-1">
-            <p class="zine-no text-right text-5xl">№ {String(idx + 1).padStart(2, '0')}</p>
+            <p class="zine-no text-right text-5xl" aria-hidden="true">№ {String(idx + 1).padStart(2, '0')}</p>
             <p class="eyebrow mb-3 w-fit">LAYANAN</p>
             <h2 class="font-serif text-2xl leading-snug">{svc.title}</h2>
             <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{svc.summary}</p>

@@ -97,7 +97,7 @@ function isActive(href: string): boolean {
         {NAV.map((item, i) => (
           <a href={item.href} data-menu-close
             class:list={['flex items-center gap-3 py-3 text-base', isActive(item.href) ? 'font-semibold text-secondary' : 'text-foreground']}>
-            <span class="zine-no font-mono text-xs">{String(i + 1).padStart(2, '0')}</span>
+            <span class="zine-no font-mono text-xs" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
             {item.label}
           </a>
         ))}
