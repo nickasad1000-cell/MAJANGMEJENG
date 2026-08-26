@@ -129,8 +129,17 @@
 
   .zine-no {
     font-family: var(--font-serif);
-    color: color-mix(in oklab, var(--orange) 55%, transparent);
+    /* 70% orange-deep ≈ 3.3:1 di krem — lolos large-text, tetap tampak pudar */
+    color: color-mix(in oklab, var(--orange-deep) 70%, transparent);
     line-height: 1; user-select: none;
+  }
+  [data-theme='dark'] .zine-no {
+    color: color-mix(in oklab, #FF8A5C 70%, transparent);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .zine-no {
+      color: color-mix(in oklab, #FF8A5C 70%, transparent);
+    }
   }
   /* zine-no di atas foto → beri shadow agar tetap terbaca */
   .zine-no-on-photo { text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 2px rgba(0,0,0,.9); }
