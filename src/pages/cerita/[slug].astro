@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { marked } from 'marked';
 import Base from '../../layouts/Base.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import { getStories, getStory, PILLAR_LABELS } from '../../lib/data';
@@ -14,8 +15,9 @@ if (!story) {
 
 const related = (await getStories()).filter((r) => r.id !== story.id && r.pillar === story.pillar).slice(0, 3);
 const date = new Date(story.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-const paragraphs = story.body_md.split('\n\n').filter(Boolean);
-const words = story.body_md.split(/\s+/).length;
+// Render markdown penuh (hr, italic, list, blockquote) — konten dari CMS milik sendiri
+const bodyHtml = await marked.parse(story.body_md ?? '');
+const words = (story.body_md ?? '').split(/\s+/).filter(Boolean).length;
 const readMinutes = Math.max(1, Math.round(words / 200));
 const heroImg = resolveImage(story.hero_image);
 
@@ -93,12 +95,8 @@ export async function getStaticPaths() {
       </figure>
     )}
 
-    {/* Article body — drop cap + AAA prose */}
-    <div class="prose-article mx-auto mt-12 max-w-2xl">
-      {paragraphs.map((para) => (
-        <p class="mt-6 text-lg leading-[1.75] text-foreground/90 first:mt-0">{para}</p>
-      ))}
-    </div>
+    {/* Article body — markdown penuh + drop cap + AAA prose */}
+    <div class="prose-article mx-auto mt-12 max-w-2xl" set:html={bodyHtml} />
 
     {story.platform_url && story.platform && (
       <div class="mx-auto mt-12 max-w-2xl">

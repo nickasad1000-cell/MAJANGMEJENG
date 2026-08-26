@@ -20,8 +20,8 @@
 
   --color-secondary: var(--orange-deep);   /* AA-safe orange for small text/links */
   --color-secondary-foreground: #ffffff;
-  --orange-deep: #C2410C;                  /* 4.8:1 on cream / 5.2:1 w-putih — WCAG AA */
-  --surface-orange-deep: #C2410C;          /* band CTA: putih kecil di atasnya lolos AA */
+  --orange-deep: #A83C0A;                  /* 5.3:1 di krem, 6.3:1 w-putih — WCAG AA+ */
+  --surface-orange-deep: #A83C0A;          /* band CTA: putih kecil di atasnya lolos AA */
   --color-accent: oklch(86% 0.12 40);
   --color-primary: oklch(24% 0.055 165);
   --color-primary-foreground: oklch(96% 0.02 80);
@@ -91,6 +91,8 @@
 @layer base {
   *, *::before, *::after { border-color: var(--color-border); }
   html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+  /* Hapus delay tap 300ms & double-tap zoom di elemen interaktif (browser lama) */
+  a, button, [role="button"], input, select, textarea, label { touch-action: manipulation; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -168,6 +170,29 @@
     padding-right: 0.12em; padding-top: 0.06em;
     color: var(--orange);
   }
+  /* Tipografi untuk markdown hasil render (marked) */
+  .prose-article > p {
+    margin-top: 1.5rem;
+    font-size: 1.125rem; line-height: 1.75;
+    color: color-mix(in oklab, var(--color-foreground) 90%, transparent);
+  }
+  .prose-article > *:first-child { margin-top: 0; }
+  .prose-article > hr {
+    margin: 2.75rem auto; border: 0; height: 2px; width: 64px;
+    background: var(--orange); border-radius: 999px;
+  }
+  .prose-article > ul, .prose-article > ol {
+    margin-top: 1.5rem; padding-left: 1.4rem;
+    font-size: 1.125rem; line-height: 1.75;
+    color: color-mix(in oklab, var(--color-foreground) 90%, transparent);
+    display: grid; gap: 0.5rem;
+  }
+  .prose-article > blockquote {
+    margin-top: 1.5rem; padding-left: 1.25rem;
+    border-left: 2px solid var(--orange);
+    font-style: italic; color: var(--color-muted-foreground);
+  }
+  .prose-article strong { font-weight: 600; color: var(--color-foreground); }
 
   /* animated underline for nav/text links */
   .link-fx { position: relative; }
@@ -192,7 +217,7 @@
 }
 
 @media print {
-  .print-grain, SiteHeader, header, footer, .btn-primary, .btn-outline { display: none !important; }
+  .print-grain, header, footer, .btn-primary, .btn-outline, #cookie-banner { display: none !important; }
   body { background: #fff !important; color: #111 !important; }
   a { text-decoration: none; color: inherit; }
   a[href^="http"]::after { content: ' (' attr(href) ')'; font-size: 0.75em; color: #555; }

@@ -121,7 +121,7 @@ const orgJsonLd = {
         </div>
       ))}
     </div>
-    <a href="/cerita" class="link-fx mt-8 inline-flex text-sm font-medium md:hidden">Lihat semua cerita →</a>
+    <a href="/cerita" class="link-fx mt-8 inline-flex min-h-11 items-center text-sm font-medium md:hidden">Lihat semua cerita →</a>
   </section>
 
   {/* ============ PERJALANAN — editorial photo triptych ============ */}
@@ -193,7 +193,7 @@ const orgJsonLd = {
           );
         })}
       </div>
-      <a href="/lokasi" class="link-fx mt-8 inline-flex text-sm font-medium">Semua kawasan →</a>
+      <a href="/lokasi" class="link-fx mt-8 inline-flex min-h-11 items-center text-sm font-medium">Semua kawasan →</a>
     </section>
   )}
 
@@ -201,7 +201,7 @@ const orgJsonLd = {
   <Dengarkan />
 
   {/* ============ MANIFESTO — full-bleed orange ============ */}
-  <section class="text-white" style="background:#C2410C" id="manifesto">
+  <section class="text-white" style="background:var(--orange-deep)" id="manifesto">
     <div class="container-mm grid items-center gap-10 py-20 md:grid-cols-12">
       <div class="md:col-span-8">
         <h2 class="font-serif text-4xl font-semibold leading-snug tracking-tight md:text-6xl">
@@ -227,11 +227,20 @@ const orgJsonLd = {
   </section>
 
   <script>
-    // Respect prefers-reduced-motion: pause hero video instead of autoplaying.
+    // Hemat data & hormati preferensi gerak: video hero jangan autoplay bila
+    // pengguna aktifkan Save-Data / prefers-reduced-data / reduced-motion.
     const heroVideo = document.querySelector<HTMLVideoElement>('section video[autoplay]');
-    if (heroVideo && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      heroVideo.removeAttribute('autoplay');
-      heroVideo.pause();
+    if (heroVideo) {
+      const conn = (navigator as { connection?: { saveData?: boolean } }).connection;
+      const saveData =
+        conn?.saveData === true ||
+        window.matchMedia('(prefers-reduced-data: reduce)').matches ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (saveData) {
+        heroVideo.removeAttribute('autoplay');
+        heroVideo.pause();
+        heroVideo.preload = 'none';
+      }
     }
   </script>
 </Base>

@@ -6,6 +6,9 @@ import '@fontsource/dm-sans/700.css';
 import '@fontsource/dm-mono/400.css';
 import '@fontsource-variable/fraunces/index.css';
 import '@fontsource-variable/fraunces/opsz-italic.css';
+// Preload dua font utama pemikul LCP (heading hero) — URL di-resolve Vite dari paket
+import frauncesNormalWoff2 from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
+import frauncesItalicWoff2 from '@fontsource-variable/fraunces/files/fraunces-latin-opsz-italic.woff2?url';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import CookieBanner from '../components/CookieBanner.astro';
@@ -59,6 +62,9 @@ const fullTitle = title.includes('Majang Mejeng') ? title : `${title} — Majang
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/favicon.ico" />
     <link rel="manifest" href="/site.webmanifest" />
+
+    <link rel="preload" href={frauncesNormalWoff2} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={frauncesItalicWoff2} as="font" type="font/woff2" crossorigin />
 
     {/* Theme boot — no flash */}
     <script is:inline>
